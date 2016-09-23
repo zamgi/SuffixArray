@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Reference.DiagnosisCodes - search diagnosis on the part of the name</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="description" content="Reference.DiagnosisCodes; search diagnosis on the part of the name; suffix search; natural language processing; computational linguistics;" />
+    <meta name="keywords"    content="Reference.DiagnosisCodes; search diagnosis on the part of the name; suffix search; natural language processing; computational linguistics;" />
+    <link rel="stylesheet" type="text/css" media="all" href="rc/css/style.css" />
+    <link rel="stylesheet" type="text/css" media="all" href="rc/css/jquery-ui.css" />
+    <script type="text/javascript" src="rc/javascript/jquery-1.9.1.js"></script>
+    <script type="text/javascript" src="rc/javascript/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="rc/javascript/main.js"></script>
+</head>
+<body class="default">
+    <noscript>
+        <div style="background-color: #F00; color: #FFF; text-align: center; padding: 10px;">This site requires JavaScript enabled in your browser.</div>
+    </noscript>
+    <div id="wrapper">
+        <div id="mainWrapper" class="clearfix" style="margin-top: 5px">
+            <div id="main" class="clearfix">
+                <div id="mainPageContent">
+                    <h2 id="periodsHeader" class="h-head">
+                        <span>Reference.DiagnosisCodes - search diagnosis on the part of the name</span>
+                    </h2>
+
+                    <div>
+                        <span id="inputTextLength"></span>
+                        <input id="suffix" type="text" value="mic" title="the part of the diagnosis name" />
+                        <input id="maxCount" type="number" value="1000" min="1" max="99999999" title="the maximum number of entries to return" /> 
+                        <span style="display: none;">
+                            <label for="tableView">, [table of results </label>
+                            <input id="tableView" type="checkbox" checked="checked"/><label for="tableView">]</label>
+                        </span>
+                    </div>
+
+                    <div id="processHeader" class="suggest-header"></div>
+                    <div id="processResult">
+                        <table>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="processFooter" class="suggest-footer"></div>
+
+                    <div class="page-box-button">
+                        <input id="processButton" class="form-button" value="Search" type="submit" style="width: 220px">
+                    </div>
+                </div>
+
+            </div>
+            <div id="mainTop"></div>
+            <div id="mainTopLeft"></div>
+            <div id="mainTopRight"></div>
+            <div id="mainBottom"></div>
+            <div id="mainBottomLeft"></div>
+            <div id="mainBottomRight"></div>
+        </div>
+        <div id="footer" class="clearfix">
+            <div id="footerMenu"></div>
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</body>
+</html>
