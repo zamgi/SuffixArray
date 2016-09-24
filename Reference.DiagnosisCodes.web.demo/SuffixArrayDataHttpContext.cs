@@ -62,7 +62,7 @@ namespace Reference.DiagnosisCodes.web.demo
                     sa = _SuffixArray;
                     if ( sa == null )
                     {
-                        sa = new SuffixArray< tuple >( tuples, default(tuple) );
+                        sa = new SuffixArray< tuple >( tuples, new tupleIStringValueGetter() );
                         _SuffixArray = sa;
 
                         GC.Collect();
@@ -180,7 +180,7 @@ namespace Reference.DiagnosisCodes.web.demo
             }
             return (tuples);
         }
-        public IList< tuple > GetTupleData()
+        /*public IList< tuple > GetTupleData()
         {
             var f = _TupleData;
             if ( f == null )
@@ -212,7 +212,7 @@ namespace Reference.DiagnosisCodes.web.demo
                     if ( f == null )
                     {
                         var tupleData = GetTupleData();
-                        f = new SuffixArray< tuple >( tupleData, default(tuple) );
+                        f = new SuffixArray< tuple >( tupleData, new tupleIStringValueGetter() );
                         _SuffixArray = f;
 
                         GC.Collect();
@@ -220,7 +220,7 @@ namespace Reference.DiagnosisCodes.web.demo
                 }
             }
             return (f);
-        }
+        }*/
 
         private SuffixArray< tuple > _SuffixArray
         {

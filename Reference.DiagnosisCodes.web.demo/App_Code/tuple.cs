@@ -3,18 +3,21 @@ using System.IO;
 
 namespace Reference.DiagnosisCodes.web.demo
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    internal struct tuple : IStringValueGetter< tuple >
+    internal sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
     {
-        public int    Id   { get; private set; }
-        public string Text { get; private set; }
-
         public string GetStringValue( tuple t )
         {
             return (t.Text);
         }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    internal struct tuple
+    {
+        public int    Id   { get; private set; }
+        public string Text { get; private set; }
 
         public static tuple Create( string s )
         {

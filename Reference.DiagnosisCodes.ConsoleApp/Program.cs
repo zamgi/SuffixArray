@@ -22,15 +22,19 @@ namespace Reference.DiagnosisCodes.ConsoleApp
     internal class Program
     {
         [Serializable]
-        private struct tuple : IStringValueGetter< tuple >
+        private sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
         {
-            public int    Id   { get; private set; }
-            public string Text { get; private set; }
-
             public string GetStringValue( tuple t )
             {
                 return (t.Text);
-            }
+            }                
+        }
+
+        [Serializable]
+        private struct tuple
+        {
+            public int    Id   { get; private set; }
+            public string Text { get; private set; }
 
             public static tuple Create( string s )
             {
@@ -80,7 +84,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             Console.WriteLine( "Start build suffix-array..." );
 
             sw = Stopwatch.StartNew();
-            var sa = new SuffixArray< tuple >( tuples, default(tuple) );
+            var sa = new SuffixArray< tuple >( tuples, new tupleIStringValueGetter() );
             sw.Stop();
 
             Console.WriteLine( "end, elapsed: " + sw.Elapsed );
