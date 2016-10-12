@@ -164,7 +164,7 @@ ul.main-link-list li { margin-bottom: 10px; }
 .id { color: #000; padding-right: 2px; text-align: right !important; }
 .suggest { color: #999; font-size: 11px; line-height: 17px; }
 .suggest-query { color: #000; font-size: 13px; }
-.suggest-bold { color: #000; font-size: 13px; font-weight: 700; font-family: Roboto,Arial,sans-serif; font-style: normal; }
+.suggest-bold { color: #000; font-size: 13px; font-weight: 700; /*color: red;*/ font-family: Roboto,Arial,sans-serif; font-style: normal; }
 .suggest-city-name { color: green; font-weight: bold; }
 .error-suggest { text-align: center; font-size: 13px; }
 .processing-suggest { text-align: center; font-style: italic; font-size: 13px; }
