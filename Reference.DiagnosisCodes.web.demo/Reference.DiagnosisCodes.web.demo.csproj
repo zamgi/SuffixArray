@@ -59,14 +59,10 @@
     <Content Include="rc\css\style.css" />
     <Content Include="rc\images\bg-btn.gif" />
     <Content Include="rc\images\bg-h2.gif" />
-    <Content Include="rc\images\bg_body.gif" />
     <Content Include="rc\images\bg_html.png" />
     <Content Include="rc\images\bg_html_rl.png" />
     <Content Include="rc\images\btn_bg.gif" />
-    <Content Include="rc\images\logo.jpg" />
-    <Content Include="rc\images\sm.png" />
     <Content Include="rc\images\top_menu_bg.gif" />
-    <Content Include="rc\images\top_menu_corner.jpg" />
     <Content Include="rc\images\ui-anim_basic_16x16.gif" />
     <Content Include="rc\javascript\jquery-1.9.1.js" />
     <Content Include="rc\javascript\main.js" />
