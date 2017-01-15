@@ -126,12 +126,12 @@ $(document).ready(function () {
             });
             */
             
-            _html = 'delivered: <span class="border">' + tuples.values.length + '</span>';
+            _html = 'delivered: <span class="border value">' + tuples.values.length + '</span>';
             if (tuples.findTotalCount != tuples.values.length) {
-                _html += ', found: <span class="border">' + tuples.findTotalCount + '</span>';
+                _html += ', found: <span class="border value">' + tuples.findTotalCount + '</span>';
             }
-            _html += ', suffix: <span class="border">' + tuples.suffix + '</span>';
-            _html += ', (search elapsed: <span class="border">' + elapsedMilliseconds + '</span> ms)';
+            _html += ', suffix: <span class="border value">' + tuples.suffix + '</span>';
+            _html += ', (search elapsed: <span class="border value">' + elapsedMilliseconds + '</span> ms)';
             $("#processHeader").html(_html);
 
             var array = [];
@@ -167,11 +167,11 @@ $(document).ready(function () {
         $processResult.removeClass('error').text('');
         processing_end();
         if (tuples.values && tuples.values.length != 0) {
-            var _html = 'delivered: <span class="border">' + tuples.values.length + '</span>';
+            var _html = 'delivered: <span class="border value">' + tuples.values.length + '</span>';
             if (tuples.findTotalCount != tuples.values.length)
-                _html += ', found: <span class="border">' + tuples.findTotalCount + '</span>';
-            _html += ', suffix: <span class="border">' + tuples.suffix + '</span>';
-            _html += ', (search elapsed: <span class="border">' + elapsedMilliseconds + '</span> ms)';
+                _html += ', found: <span class="border value">' + tuples.findTotalCount + '</span>';
+            _html += ', suffix: <span class="border value">' + tuples.suffix + '</span>';
+            _html += ', (search elapsed: <span class="border value">' + elapsedMilliseconds + '</span> ms)';
             $("#processHeader").html(_html);
 
             var $table = $('<table />');
@@ -233,9 +233,8 @@ $(document).ready(function () {
     function is_text_empty(text) {
         return (text.replace(/(^\s+)|(\s+$)/g, "") == "");
     };
-    function split(val) {
-        //---return val.split(/,\s*/);
-        return val.split(/ \s*/);
+    function split(val) {        
+        return val.split(/ \s*/); //---return val.split(/,\s*/);
     };
     function extractLast(term) {
         return split(term).pop();

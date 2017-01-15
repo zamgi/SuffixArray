@@ -164,13 +164,14 @@ ul.main-link-list li { margin-bottom: 10px; }
 .id { color: #000; padding-right: 2px; text-align: right !important; }
 .suggest { color: #999; font-size: 11px; line-height: 17px; }
 .suggest-query { color: #000; font-size: 13px; }
-.suggest-bold { color: #000; font-size: 13px; font-weight: 700; /*color: red;*/ font-family: Roboto,Arial,sans-serif; font-style: normal; }
+.suggest-bold { color: #cd0a0a; font-size: 13px; font-weight: 700; font-family: Roboto,Arial,sans-serif; font-style: normal; }
 .suggest-city-name { color: green; font-weight: bold; }
 .error-suggest { text-align: center; font-size: 13px; }
 .processing-suggest { text-align: center; font-style: italic; font-size: 13px; }
 .no-suggest { text-align: center; font-style: italic; font-size: 13px; }
 .suggest-header { margin-top: 2px; margin-bottom: 2px; border: 1px dotted grey; background-color: whitesmoke; color: #999; font-size: 11px; line-height: 17px; /*padding-left: 250px;*/ text-align: center; text-decoration: wavy; /*background-color: whitesmoke;*/ }
-.suggest-header .border { border: 1px solid lightgrey; padding-left: 1px; }
+    .suggest-header .border { border: 1px solid lightgrey; padding-left: 1px; }
+    .suggest-header .value{ color: #cd0a0a; /*font-weight: bold;*/ }
 .suggest-footer { margin-top: 2px; margin-bottom: 2px; border: 1px dotted grey; background-color: whitesmoke; color: #999; font-size: 11px; line-height: 17px; padding-left: 30px; text-align: center; text-decoration: wavy; /*background-color: whitesmoke;*/ }
 div.suggest:hover { background-color: lightskyblue; /*border: 1px dotted blue;*/ }
 #tableView, label[for='tableView'] { cursor: pointer; vertical-align: middle; color: darkgray; font-size: smaller; }
