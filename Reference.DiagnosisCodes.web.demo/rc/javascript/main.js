@@ -1,4 +1,4 @@
-
+﻿
 $(document).ready(function () {
     var getMaxCount = function () {
         var maxCount = parseInt( trim_text( $('#maxCount').val().toString() ) );
@@ -213,7 +213,7 @@ $(document).ready(function () {
         $('#suffix,#maxCount').addClass('no-change').attr('readonly', 'readonly').attr('disabled', 'disabled');
         $('#processResult').removeClass('error').html('');
         $('#processButton').addClass('disabled');
-        $("#processHeader").html('<div class="processing-suggest"><img src="rc/images/roller.gif" /> Processing...</div>');
+        $("#processHeader").html('<div class="processing-suggest"><img src="roller.gif" /> Processing...</div>');
         $("#processFooter").html('');
     };
     function processing_end() {
