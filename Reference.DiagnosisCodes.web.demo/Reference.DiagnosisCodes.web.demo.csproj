@@ -80,6 +80,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SuffixArrayHandler.ashx" />
+    <Content Include="..\[data]\Reference.DiagnosisCodes.small.csv">
+      <Link>Reference.DiagnosisCodes.small.csv</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
