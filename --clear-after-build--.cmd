@@ -1,4 +1,4 @@
-del "*.suo" /Q
+del "*.suo" /Q/A
 del "Reference.DiagnosisCodes.web.demo\bin\*.pdb" /Q
 del "Reference.DiagnosisCodes.web.demo\*.csproj.user" /Q
 rd "Reference.DiagnosisCodes.web.demo\obj" /S/Q
