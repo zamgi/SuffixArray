@@ -1,10 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
-using System.Runtime;
 
-namespace System.Collections
+namespace System.Collections.Generic
 {
     /// <summary>
     /// 
@@ -34,7 +31,6 @@ namespace System.Collections
             public string Suffix;
             public int    SuffixIndex;
             public int    WordIndex;
-
 #if DEBUG
             public override string ToString()
             {
@@ -43,24 +39,46 @@ namespace System.Collections
 #endif
         }
 
+        private static bool[] IS_LETTER_OR_DIGIT;
+        private static void CreateIsLetterOrDigitArray()
+        {
+            IS_LETTER_OR_DIGIT = new bool[ char.MaxValue ];
+            for ( var ch = char.MinValue; ; )
+            {
+                IS_LETTER_OR_DIGIT[ ch ] = char.IsLetter( ch ) || char.IsDigit( ch );
+                if ( ++ch == char.MaxValue )
+                {
+                    break;
+                }
+            }
+        }
+        private static void DestroyIsLetterOrDigitArray()
+        {
+            IS_LETTER_OR_DIGIT = null;
+        }
+
         private static string ClearString( string word, out int startIndex )
         {
             startIndex = 0;
             int len = word.Length;
             for ( ; startIndex < len; startIndex++ )
             {
-                var ch = word[ startIndex ];
-                if ( char.IsLetter( ch ) || char.IsDigit( ch ) )
+                if ( IS_LETTER_OR_DIGIT[ word[ startIndex ] ] )
                     break;
+                //var ch = word[ startIndex ];
+                //if ( char.IsLetter( ch ) || char.IsDigit( ch ) )
+                //    break;
             }
             if ( startIndex < len )
             {
                 var endIndex = len - 1;
                 for ( ; 0 <= endIndex; endIndex-- )
                 {
-                    var ch = word[ endIndex ];
-                    if ( char.IsLetter( ch ) || char.IsDigit( ch ) )
+                    if ( IS_LETTER_OR_DIGIT[ word[ endIndex ] ] )
                         break;
+                    //var ch = word[ endIndex ];
+                    //if ( char.IsLetter( ch ) || char.IsDigit( ch ) )
+                    //    break;
                 }
                 if ( startIndex <= endIndex )
                 {
@@ -118,6 +136,8 @@ namespace System.Collections
         internal static SuffixArray< T >.tuple_t[] Build( 
             IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
         {
+            CreateIsLetterOrDigitArray();
+
             var totalSuffixCount = (from value in objs.Skip( index ).Take( length )
                                     select GetSuffixCount( stringValueGetter.GetStringValue( value ) )
                                    ).Sum();
@@ -143,7 +163,7 @@ namespace System.Collections
             arrayIndex = 0;
             var s = array[ arrayIndex ];
             var suffixCurrent = s.Suffix;
-            var llCurrent     = new linked_list< SuffixArray< T >.data_t >();
+            var llCurrent     = new SimplyLinkedList< SuffixArray< T >.data_t >();
             tuples[ arrayIndex++ ] = new SuffixArray< T >.tuple_t() { Suffix = suffixCurrent, Data = llCurrent };
             llCurrent.Add( new SuffixArray< T >.data_t( s.SuffixIndex, s.WordIndex ) );
             for ( int i = 1, len = array.Length; i < len; i++ )
@@ -152,7 +172,7 @@ namespace System.Collections
                 if ( !suffixCurrent.StartsWith( s.Suffix ) )
                 {
                     suffixCurrent = s.Suffix;
-                    llCurrent     = new linked_list< SuffixArray< T >.data_t >();
+                    llCurrent     = new SimplyLinkedList< SuffixArray< T >.data_t >();
                     tuples[ arrayIndex++ ] = new SuffixArray< T >.tuple_t() { Suffix = suffixCurrent, Data = llCurrent };
                 }
                 llCurrent.Add( new SuffixArray< T >.data_t( s.SuffixIndex, s.WordIndex ) );
@@ -160,6 +180,8 @@ namespace System.Collections
             array = null;
             Array.Resize< SuffixArray< T >.tuple_t >( ref tuples, arrayIndex );
             Array.Reverse( tuples );
+
+            DestroyIsLetterOrDigitArray();
 
             return (tuples);
         }
@@ -199,8 +221,8 @@ namespace System.Collections
         [Serializable]
         internal struct tuple_t
         {
-            public string                Suffix;
-            public linked_list< data_t > Data;
+            public string Suffix;
+            public SimplyLinkedList< data_t > Data;
 #if DEBUG
             public override string ToString()
             {
@@ -298,8 +320,6 @@ namespace System.Collections
             _Objects           = objs;
             _StringValueGetter = stringValueGetter;
             _Array             = SuffixArrayBuilder< T >.Build( objs, index, length, stringValueGetter );
-
-            GC.Collect();            
         }
 
         /// <summary>
@@ -466,8 +486,8 @@ namespace System.Collections
 		{
             suffix = CorrectFindSuffix( suffix, findMode );
 
-            int num = InternalBinarySearch( suffix );
-            return (num >= 0);
+            int n = InternalBinarySearch( suffix );
+            return (n >= 0);
 		}
 
         #region [.IEnumerable< tuple_t >.]
@@ -535,29 +555,29 @@ namespace System.Collections
 
         private int InternalBinarySearch( string suffix4Find )
         {
-            int i = 0;
-            int num = _Array.Length - 1;
-            while ( i <= num )
+            int i  = 0;
+            int n1 = _Array.Length - 1;
+            while ( i <= n1 )
             {
-                int num2 = i + (num - i >> 1);
-                var suffix = _Array[ num2 ].Suffix;
-                int num3;
+                int n2 = i + (n1 - i >> 1);
+                var suffix = _Array[ n2 ].Suffix;
+                int n3;
                 if ( suffix4Find.Length <= suffix.Length )
-                    num3 = string.CompareOrdinal( suffix, 0, suffix4Find, 0, suffix4Find.Length );
+                    n3 = string.CompareOrdinal( suffix, 0, suffix4Find, 0, suffix4Find.Length );
                 else
-                    num3 = string.CompareOrdinal( suffix, suffix4Find );
-                if ( num3 == 0 )
+                    n3 = string.CompareOrdinal( suffix, suffix4Find );
+                if ( n3 == 0 )
                 {
-                    return num2;
+                    return n2;
                 }
 
-                if ( num3 < 0 )
+                if ( n3 < 0 )
                 {
-                    i = num2 + 1;
+                    i = n2 + 1;
                 }
                 else
                 {
-                    num = num2 - 1;
+                    n1 = n2 - 1;
                 }
             }
             return (~i);

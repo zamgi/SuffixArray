@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
-using System.Linq;
 using System.Web;
-
-using find_result_t = System.Collections.SuffixArray< Reference.DiagnosisCodes.web.demo.tuple >.find_result_t;
 
 namespace Reference.DiagnosisCodes.web.demo
 {
@@ -42,12 +38,15 @@ namespace Reference.DiagnosisCodes.web.demo
                     tuples = _TupleData;
                     if ( tuples == null )
                     {
-                        tuples = CreateTupleData();
-                        _TupleData = tuples;
-
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        GC.Collect();
+                        {
+                            tuples = CreateTupleData();
+                            _TupleData = tuples;
+                        }
+                        {
+                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+                        }
                     }
                 }
             }
@@ -62,12 +61,15 @@ namespace Reference.DiagnosisCodes.web.demo
                     sa = _SuffixArray;
                     if ( sa == null )
                     {
-                        sa = new SuffixArray< tuple >( tuples, new tupleIStringValueGetter() );
-                        _SuffixArray = sa;
-
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        GC.Collect();
+                        {
+                            sa = new SuffixArray<tuple>( tuples, new tupleIStringValueGetter() );
+                            _SuffixArray = sa;
+                        }
+                        {
+                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+                            GC.WaitForPendingFinalizers();
+                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+                        }
                     }
                 }
             }
@@ -178,50 +180,10 @@ namespace Reference.DiagnosisCodes.web.demo
                     tuples.Add( tuple.Create( line ) );
                 }
             }
+            tuples.Capacity = tuples.Count;
             return (tuples);
         }
-        /*public IList< tuple > GetTupleData()
-        {
-            var f = _TupleData;
-            if ( f == null )
-            {
-                lock ( _Lock )
-                {
-                    f = _TupleData;
-                    if ( f == null )
-                    {
-                        f = CreateTupleData();
-                        _TupleData = f;
-
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
-                        GC.Collect();
-                    }
-                }
-            }
-            return (f);
-        }
-        public SuffixArray< tuple > GetSuffixArray()
-        {
-            var f = _SuffixArray;
-            if ( f == null )
-            {
-                lock ( _Lock )
-                {
-                    f = _SuffixArray;
-                    if ( f == null )
-                    {
-                        var tupleData = GetTupleData();
-                        f = new SuffixArray< tuple >( tupleData, new tupleIStringValueGetter() );
-                        _SuffixArray = f;
-
-                        GC.Collect();
-                    }
-                }
-            }
-            return (f);
-        }*/
-
+      
         private SuffixArray< tuple > _SuffixArray
         {
             get { return ((SuffixArray< tuple >) _Context.Cache[ "_SuffixArray" ]); }

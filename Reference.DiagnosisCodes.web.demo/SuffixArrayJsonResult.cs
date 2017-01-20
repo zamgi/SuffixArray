@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 
 using Newtonsoft.Json;
-using find_result_t = System.Collections.SuffixArray< Reference.DiagnosisCodes.web.demo.tuple >.find_result_t;
+using find_result_t = System.Collections.Generic.SuffixArray< Reference.DiagnosisCodes.web.demo.tuple >.find_result_t;
 
 namespace Reference.DiagnosisCodes.web.demo
 {
@@ -31,12 +28,6 @@ namespace Reference.DiagnosisCodes.web.demo
         /// </summary>
         public struct value_t
         {
-            public value_t( find_result_t fr ) : this()
-            {
-                Name        = fr.Word;
-                SuffixIndex = fr.SuffixIndex;
-            }
-
             [JsonProperty(PropertyName="id")]        public int    Id
             {
                 get;

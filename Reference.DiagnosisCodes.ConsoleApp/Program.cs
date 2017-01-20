@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Reference.DiagnosisCodes.ConsoleApp
 {
@@ -19,7 +17,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
     /// <summary>
     /// 
     /// </summary>
-    internal class Program
+    internal static class Program
     {
         [Serializable]
         private sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
@@ -51,9 +49,15 @@ namespace Reference.DiagnosisCodes.ConsoleApp
         private static void Main( string[] args )
         {
             var sa = CreateSuffixArray();
+
+            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+            GC.WaitForPendingFinalizers();
+            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+
             SuffixArray__test( sa );
 
-            Console.WriteLine( Environment.NewLine + "[.....finish.....]" );
+            Console.ForegroundColor = ConsoleColor.DarkGray;
+            Console.WriteLine( Environment.NewLine + "[.....finita.....]" );
             Console.ReadLine();
         }
 
@@ -73,6 +77,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
                     tuples.Add( t );
                 }
             }
+            tuples.Capacity = tuples.Count;
             sw.Stop();
 
             Console.WriteLine( "end, elapsed: " + sw.Elapsed );
@@ -91,10 +96,6 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             Console.WriteLine( "base of suffix: " + sa.GetAllSuffixesCount( SuffixArray<tuple>.EnumerableModeEnum.BaseOfSuffix ) );
             Console.WriteLine( "all sub-suffix: " + sa.GetAllSuffixesCount( SuffixArray<tuple>.EnumerableModeEnum.AllSubSuffix ) );
             Console.WriteLine( "------------------------------------" + Environment.NewLine );
-
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            GC.Collect();
 
             return (sa);
         }

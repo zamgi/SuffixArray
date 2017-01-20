@@ -81,16 +81,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="SuffixArrayHandler.ashx" />
-    <Content Include="..\[data]\Reference.DiagnosisCodes.small.csv">
-      <Link>Reference.DiagnosisCodes.small.csv</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
     <None Include="Web.Release.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
+    <Content Include="[resources]\Reference.DiagnosisCodes.csv" />
+    <Content Include="[resources]\Reference.DiagnosisCodes.small.csv" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SuffixArray\SuffixArray.csproj">
@@ -98,6 +96,7 @@
       <Name>SuffixArray</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>

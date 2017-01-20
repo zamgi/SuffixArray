@@ -1,8 +1,12 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Reference.DiagnosisCodes.web.demo
 {
+    /// <summary>
+    /// 
+    /// </summary>
     internal sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
     {
         public string GetStringValue( tuple t )
@@ -23,10 +27,12 @@ namespace Reference.DiagnosisCodes.web.demo
         {
             var index = s.IndexOf( ';' );
             if ( index == -1 )
+            {
                 throw (new InvalidDataException());
+            }
 
             return (new tuple() { Id   = int.Parse( s.Substring( 0, index ) ), 
-                                    Text = s.Substring( index + 1 ) 
+                                  Text = s.Substring( index + 1 ) 
                                 });
         }
     }
