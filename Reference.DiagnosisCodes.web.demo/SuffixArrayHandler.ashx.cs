@@ -24,8 +24,7 @@ namespace Reference.DiagnosisCodes.web.demo
                 var suffix   = context.Request[ "suffix" ];
                 var maxCount = context.Request[ "maxCount" ].Try2Int( 25 );
 
-                var ctx = new SuffixArrayDataHttpContext( context );
-                var p = ctx.Find( suffix, maxCount );
+                var p = SuffixArrayDataHttpContext.Find( suffix, maxCount );
 
                 context.Response.ToJson( p );
             }

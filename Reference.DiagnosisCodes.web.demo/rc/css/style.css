@@ -94,18 +94,6 @@ body.default { background:#F4F4F4; font-family:Arial, serif; font-size:13px; lin
 #headerSiteTitle { margin:0; }
 #header-site-slogan { font-size:14px; font-style:italic; font-weight:bold; margin:0; padding:0 0 0 10px; }
 #header-site-slogan { font-size:14px; font-style:italic; font-weight:bold; margin:0; padding:0 0 0 10px; }
-#header-menu { position:absolute; top:8px; right:0px; width: 682px; }
-#header-menu ul { padding:0; margin: 15px 0 0 0; float: right;}
-#header-menu li { margin:0; padding:0; float:left; position:relative; background:url("../images/top_menu_bg.gif") 0 -40px repeat-x; }
-#header-menu li.active, #header-menu li:hover { background-position:0 0; }
-#header-menu .header-menu-corner-l, #header-menu .header-menu-corner-r { background:url("../images/top_menu_corner.jpg") no-repeat; width:18px; height:40px; position:absolute; z-index:20; }
-#header-menu .header-menu-corner-l { top:0; left:0; background-position:-36px 0; }
-#header-menu .header-menu-corner-r { top:0; right:0; background-position:-54px 0; }
-#header-menu .active .header-menu-corner-l, #header-menu li:hover .header-menu-corner-l  { background-position:0 0; }
-#header-menu .active  .header-menu-corner-r, #header-menu li:hover .header-menu-corner-r { background-position:-18px 0; }
-#header-menu li a { display:block; line-height:36px; padding:0 18px; font-family: Verdana, Tahoma, sans-serif; font-size:11px; font-weight:bold; color:#FFFFFF; text-decoration:none; margin:2px 0; border-left:1px solid #217798; border-right:1px solid #79CDEC; position:relative;  z-index:21; }
-#header-menu li.first a { border-left:none; }
-#header-menu li.last a { border-right:none; }
 
 #mainWrapper { width:100%; background:url("../images/bg_html_rl.png") repeat-y; position:relative; }
 #mainWrapper img { height: auto; max-width: 100%; width: auto; }
@@ -164,7 +152,7 @@ ul.main-link-list li { margin-bottom: 10px; }
 .id { color: #000; padding-right: 2px; text-align: right !important; }
 .suggest { color: #999; font-size: 11px; line-height: 17px; }
 .suggest-query { color: #000; font-size: 13px; }
-.suggest-bold { color: #cd0a0a; font-size: 13px; font-weight: 700; font-family: Roboto,Arial,sans-serif; font-style: normal; }
+.suggest-bold { color: #cd0a0a; font-size: 13px; font-weight: 700; font-family: Roboto,Arial,sans-serif; font-style: normal; border-bottom: 1px dotted silver; }
 .suggest-city-name { color: green; font-weight: bold; }
 .error-suggest { text-align: center; font-size: 13px; }
 .processing-suggest { text-align: center; font-style: italic; font-size: 13px; }
@@ -178,4 +166,4 @@ div.suggest:hover { background-color: lightskyblue; /*border: 1px dotted blue;*/
 #maxCount { width: 50px }
 #suffix { width: 400px }
 
-.ui-autocomplete-loading { background: white url('rc/images/ui-anim_basic_16x16.gif') right center no-repeat; }
+.ui-autocomplete-loading { background: white url('rc/images/roller.gif') right center no-repeat; }

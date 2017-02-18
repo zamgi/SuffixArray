@@ -152,7 +152,7 @@ $(document).ready(function () {
             }
 
             if (tuples.findTotalCount != tuples.values.length)
-                _html = '<i>...ещё ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
+                _html = '<i>...more ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
             else
                 _html = '';
             $("#processFooter").html(_html);
@@ -194,7 +194,7 @@ $(document).ready(function () {
             $table.appendTo( $processResult );
 
             if (tuples.findTotalCount != tuples.values.length)
-                _html = '<i>...ещё ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
+                _html = '<i>...more ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
             else
                 _html = '';
             $("#processFooter").html(_html);

@@ -10,7 +10,7 @@ namespace System.Collections.Generic
 	internal sealed class SimplyLinkedListNode< T >
 	{
 		internal SimplyLinkedListNode< T > _Next;
-		internal T                     _Item;
+		internal T _Item;
 
 		/// <summary>Gets the next node in the <see cref="T:System.Collections.Generic.LinkedList`1" />.</summary>
 		/// <returns>A reference to the next node in the <see cref="T:System.Collections.Generic.LinkedList`1" />, or null if the current node is the last element (<see cref="P:System.Collections.Generic.LinkedList`1.Last" />) of the <see cref="T:System.Collections.Generic.LinkedList`1" />.</returns>
@@ -58,9 +58,8 @@ namespace System.Collections.Generic
         /// </summary>
 		public struct Enumerator : IEnumerator< T >
 		{
-			//private linked_list< T >      _List;
 			private SimplyLinkedListNode< T > _Node;
-			private T                     _Current;
+			private T _Current;
 
 			/// <summary>Gets the element at the current position of the enumerator.</summary>
 			/// <returns>The element in the <see cref="T:System.Collections.Generic.LinkedList`1" /> at the current position of the enumerator.</returns>			
@@ -78,7 +77,6 @@ namespace System.Collections.Generic
 			}
 			internal Enumerator( SimplyLinkedList< T > list )
 			{
-				//_List    = list;
 				_Node    = list._Head;
 				_Current = default(T);
 			}
@@ -112,7 +110,7 @@ namespace System.Collections.Generic
 		}
 
 		internal SimplyLinkedListNode< T > _Head;
-		internal int                   _Count;
+		internal int _Count;
 
 		/// <summary>Gets the number of nodes actually contained in the <see cref="T:System.Collections.Generic.LinkedList`1" />.</summary>
 		/// <returns>The number of nodes actually contained in the <see cref="T:System.Collections.Generic.LinkedList`1" />.</returns>
@@ -181,7 +179,7 @@ namespace System.Collections.Generic
 		/// <param name="value">The value to locate in the <see cref="T:System.Collections.Generic.LinkedList`1" />. The value can be null for reference types.</param>
 		public bool Contains( T value )
 		{
-            return Find( value ) != null;
+            return (Find( value ) != null);
 		}
 		/// <summary>Copies the entire <see cref="T:System.Collections.Generic.LinkedList`1" /> to a compatible one-dimensional <see cref="T:System.Array" />, starting at the specified index of the target array.</summary>
 		/// <param name="array">The one-dimensional <see cref="T:System.Array" /> that is the destination of the elements copied from <see cref="T:System.Collections.Generic.LinkedList`1" />. The <see cref="T:System.Array" /> must have zero-based indexing.</param>
@@ -219,7 +217,7 @@ namespace System.Collections.Generic
 		/// <summary>Finds the first node that contains the specified value.</summary>
 		/// <returns>The first <see cref="T:System.Collections.Generic.linked_list_node`1" /> that contains the specified value, if found; otherwise, null.</returns>
 		/// <param name="value">The value to locate in the <see cref="T:System.Collections.Generic.LinkedList`1" />.</param>
-		public SimplyLinkedListNode< T > Find(T value)
+		public SimplyLinkedListNode< T > Find( T value )
 		{
 			var next = _Head;
             if ( next != null )

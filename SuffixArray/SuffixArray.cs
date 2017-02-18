@@ -57,7 +57,7 @@ namespace System.Collections.Generic
             IS_LETTER_OR_DIGIT = null;
         }
 
-        private static string ClearString( string word, out int startIndex )
+        private static string ClearString_v1( string word, out int startIndex )
         {
             startIndex = 0;
             int len = word.Length;
@@ -65,9 +65,6 @@ namespace System.Collections.Generic
             {
                 if ( IS_LETTER_OR_DIGIT[ word[ startIndex ] ] )
                     break;
-                //var ch = word[ startIndex ];
-                //if ( char.IsLetter( ch ) || char.IsDigit( ch ) )
-                //    break;
             }
             if ( startIndex < len )
             {
@@ -76,9 +73,30 @@ namespace System.Collections.Generic
                 {
                     if ( IS_LETTER_OR_DIGIT[ word[ endIndex ] ] )
                         break;
-                    //var ch = word[ endIndex ];
-                    //if ( char.IsLetter( ch ) || char.IsDigit( ch ) )
-                    //    break;
+                }
+                if ( startIndex <= endIndex )
+                {
+                    return (word.Substring( startIndex, endIndex - startIndex + 1 ));
+                }
+            }   
+             
+            return (null);
+        }
+        private static string ClearString_v2( string word, ref int startIndex )
+        {
+            int len = word.Length;
+            for ( ; startIndex < len; startIndex++ )
+            {
+                if ( IS_LETTER_OR_DIGIT[ word[ startIndex ] ] )
+                    break;
+            }
+            if ( startIndex < len )
+            {
+                var endIndex = len - 1;
+                for ( ; 0 <= endIndex; endIndex-- )
+                {
+                    if ( IS_LETTER_OR_DIGIT[ word[ endIndex ] ] )
+                        break;
                 }
                 if ( startIndex <= endIndex )
                 {
@@ -93,10 +111,10 @@ namespace System.Collections.Generic
         {
             return (value.Length);
         }
-        private static IEnumerable< suffix_t > GetSuffix( int wordIndex, string word )
+        private static IEnumerable< suffix_t > GetSuffixes_v1( int wordIndex, string word )
         {
             int index_base;
-            word = ClearString( word, out index_base );
+            word = ClearString_v1( word, out index_base );
             if ( word != null )
             {
                 word = word.ToUpperInvariant();
@@ -104,12 +122,31 @@ namespace System.Collections.Generic
 
                 int index;
                 for ( int i = 1, len = word.Length; i < len; i++ )
-                {                    
-                    var suffix = ClearString( word.Substring( i ), out index );
+                {
+                    var suffix = ClearString_v1( word.Substring( i ), out index );
                     if ( suffix != null )
                     {
-                        suffix = suffix.ToUpperInvariant();
+                        //---suffix = suffix.ToUpperInvariant();
                         yield return (new suffix_t( suffix, i + index + index_base, wordIndex ));
+                    }
+                }
+            }
+        }
+        private static IEnumerable< suffix_t > GetSuffixes_v2( int wordIndex, string word )
+        {
+            int startIndex = 0;
+            word = ClearString_v2( word, ref startIndex );
+            if ( word != null )
+            {
+                word = word.ToUpperInvariant();
+                yield return (new suffix_t( word, startIndex, wordIndex ));
+
+                for ( int beginIndex = startIndex, len = word.Length; startIndex < len; startIndex++ )
+                {
+                    var suffix = ClearString_v2( word, ref startIndex );
+                    if ( suffix != null )
+                    {
+                        yield return (new suffix_t( suffix, beginIndex + startIndex, wordIndex ));
                     }
                 }
             }
@@ -128,57 +165,56 @@ namespace System.Collections.Generic
 	        yield break;
         }*/
 
-        private static int suffix_t_Comparison( suffix_t x, suffix_t y )
+        private static int suffixComparison( suffix_t x, suffix_t y )
         {
             return (string.CompareOrdinal( y.Suffix, x.Suffix ));
         }
 
-        internal static SuffixArray< T >.tuple_t[] Build( 
+        public static SuffixArray< T >.tuple_t[] Build( 
             IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
         {
             CreateIsLetterOrDigitArray();
 
             var totalSuffixCount = (from value in objs.Skip( index ).Take( length )
-                                    select GetSuffixCount( stringValueGetter.GetStringValue( value ) )
+                                        select GetSuffixCount( stringValueGetter.GetStringValue( value ) )
                                    ).Sum();
-            var arrayIndex = 0;
-            var array = new suffix_t[ totalSuffixCount ];
-            //---for ( int i = 0, len = objs.Count; i < len; i++ )
+            var suffixIndex = 0;
+            var suffixes = new suffix_t[ totalSuffixCount ];
             for ( int i = index; i < length; i++ )
             {
                 var str = stringValueGetter.GetStringValue( objs[ i ] );
                 //if ( str == "м.бабий" )
                 //System.Diagnostics.Debugger.Break();
                 //var __ = GetSuffix( i, str ).Distinct().ToArray();
-                foreach ( var suffix in GetSuffix( i, str ).Distinct() )
+                foreach ( var _suffix in GetSuffixes_v2( i, str )/*.Distinct()*/ )
                 {
-                    array[ arrayIndex++ ] = suffix;
+                    suffixes[ suffixIndex++ ] = _suffix;
                 }
             }
-            Array.Resize< suffix_t >( ref array, arrayIndex );
-            Array.Sort< suffix_t >( array, suffix_t_Comparison );
+            Array.Resize< suffix_t >( ref suffixes, suffixIndex );
+            Array.Sort< suffix_t >( suffixes, suffixComparison );
 
 
-            var tuples = new SuffixArray< T >.tuple_t[ array.Length ];
-            arrayIndex = 0;
-            var s = array[ arrayIndex ];
-            var suffixCurrent = s.Suffix;
-            var llCurrent     = new SimplyLinkedList< SuffixArray< T >.data_t >();
-            tuples[ arrayIndex++ ] = new SuffixArray< T >.tuple_t() { Suffix = suffixCurrent, Data = llCurrent };
-            llCurrent.Add( new SuffixArray< T >.data_t( s.SuffixIndex, s.WordIndex ) );
-            for ( int i = 1, len = array.Length; i < len; i++ )
+            var tuples = new SuffixArray< T >.tuple_t[ suffixes.Length ];
+            suffixIndex = 0;
+            var suffix = suffixes[ suffixIndex ];
+            var suffixText = suffix.Suffix;
+            var data       = new SimplyLinkedList< SuffixArray< T >.data_t >();
+            tuples[ suffixIndex++ ] = new SuffixArray< T >.tuple_t() { Suffix = suffixText, Data = data };
+            data.Add( new SuffixArray< T >.data_t( suffix.SuffixIndex, suffix.WordIndex ) );
+            for ( int i = 1, len = suffixes.Length; i < len; i++ )
             {
-                s = array[ i ];
-                if ( !suffixCurrent.StartsWith( s.Suffix ) )
+                suffix = suffixes[ i ];
+                if ( !suffixText.StartsWith( suffix.Suffix ) )
                 {
-                    suffixCurrent = s.Suffix;
-                    llCurrent     = new SimplyLinkedList< SuffixArray< T >.data_t >();
-                    tuples[ arrayIndex++ ] = new SuffixArray< T >.tuple_t() { Suffix = suffixCurrent, Data = llCurrent };
+                    suffixText = suffix.Suffix;
+                    data       = new SimplyLinkedList< SuffixArray< T >.data_t >();
+                    tuples[ suffixIndex++ ] = new SuffixArray< T >.tuple_t() { Suffix = suffixText, Data = data };
                 }
-                llCurrent.Add( new SuffixArray< T >.data_t( s.SuffixIndex, s.WordIndex ) );
+                data.Add( new SuffixArray< T >.data_t( suffix.SuffixIndex, suffix.WordIndex ) );
             }
-            array = null;
-            Array.Resize< SuffixArray< T >.tuple_t >( ref tuples, arrayIndex );
+            suffixes = null;
+            Array.Resize< SuffixArray< T >.tuple_t >( ref tuples, suffixIndex );
             Array.Reverse( tuples );
 
             DestroyIsLetterOrDigitArray();
@@ -261,10 +297,10 @@ namespace System.Collections.Generic
                 return (fr);
             }*/
 
-            public int     ObjIndex;
-            public string  Word;
-            public int     SuffixIndex;
-            public int     SuffixLength;
+            public int    ObjIndex;
+            public string Word;
+            public int    SuffixIndex;
+            public int    SuffixLength;
 
             public string GetBeforeSuffix()
             {
@@ -344,7 +380,9 @@ namespace System.Collections.Generic
                 {
                     var t = _Array[ i ];
                     if ( !t.Suffix.StartsWith( suffix ) )
+                    {
                         break;
+                    }
                     foreach ( var data in t.Data )
                     {
                         var word = _StringValueGetter.GetStringValue( _Objects[ data.ObjIndex ] );
@@ -360,7 +398,9 @@ namespace System.Collections.Generic
                 {
                     var t = _Array[ i ];
                     if ( !t.Suffix.StartsWith( suffix ) )
+                    {
                         break;
+                    }
                     foreach ( var data in t.Data )
                     {
                         var word = _StringValueGetter.GetStringValue( _Objects[ data.ObjIndex ] );
@@ -436,7 +476,9 @@ namespace System.Collections.Generic
                 {
                     var t = _Array[ i ];
                     if ( !t.Suffix.StartsWith( suffix ) )
+                    {
                         break;
+                    }
                     foreach ( var data in t.Data )
                     {
                         var word = _StringValueGetter.GetStringValue( _Objects[ data.ObjIndex ] );
@@ -455,7 +497,9 @@ namespace System.Collections.Generic
                 {
                     var t = _Array[ i ];
                     if ( !t.Suffix.StartsWith( suffix ) )
+                    {
                         break;
+                    }
                     foreach ( var data in t.Data )
                     {
                         var word = _StringValueGetter.GetStringValue( _Objects[ data.ObjIndex ] );
@@ -563,12 +607,16 @@ namespace System.Collections.Generic
                 var suffix = _Array[ n2 ].Suffix;
                 int n3;
                 if ( suffix4Find.Length <= suffix.Length )
+                {
                     n3 = string.CompareOrdinal( suffix, 0, suffix4Find, 0, suffix4Find.Length );
+                }
                 else
+                {
                     n3 = string.CompareOrdinal( suffix, suffix4Find );
+                }
                 if ( n3 == 0 )
                 {
-                    return n2;
+                    return (n2);
                 }
 
                 if ( n3 < 0 )

@@ -17,17 +17,11 @@ namespace Reference.DiagnosisCodes.web.demo
     /// <summary>
     /// 
     /// </summary>
-    internal struct SuffixArrayDataHttpContext
+    internal static class SuffixArrayDataHttpContext
     {
         private static readonly object _Lock = new object();
-        private readonly HttpContext _Context;
 
-        public SuffixArrayDataHttpContext( HttpContext context )
-        {
-            _Context = context;
-        }
-
-        public SuffixArrayJsonResultParams Find( string suffix, int maxCount )
+        public static SuffixArrayJsonResultParams Find( string suffix, int maxCount )
         {
             #region [.load tuple-data.]
             var tuples = _TupleData;
@@ -169,7 +163,7 @@ namespace Reference.DiagnosisCodes.web.demo
             #endregion
         }
 
-        private IList< tuple > CreateTupleData()
+        private static IList< tuple > CreateTupleData()
         {
             var appRootPath = HttpContext.Current.Server.MapPath( "~/" );
             var tuples = new List< tuple >( 110000 );
@@ -186,28 +180,5 @@ namespace Reference.DiagnosisCodes.web.demo
 
         private static SuffixArray< tuple > _SuffixArray;
         private static IList< tuple > _TupleData;
-
-        /*private SuffixArray< tuple > _SuffixArray
-        {
-            get { return ((SuffixArray< tuple >) _Context.Cache[ "_SuffixArray" ]); }
-            set
-            {                
-                if ( value != null )
-                    _Context.Cache[ "_SuffixArray" ] = value;
-                else
-                    _Context.Cache.Remove( "_SuffixArray" );
-            }
-        }
-        private IList< tuple > _TupleData
-        {
-            get { return ((IList< tuple >) _Context.Cache[ "_TupleData" ]); }
-            set
-            {                
-                if ( value != null )
-                    _Context.Cache[ "_TupleData" ] = value;
-                else
-                    _Context.Cache.Remove( "_TupleData" );
-            }
-        }*/
     }
 }
