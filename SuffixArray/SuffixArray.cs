@@ -1,4 +1,4 @@
-using System;
+ï»¿using System;
 using System.Linq;
 
 namespace System.Collections.Generic
@@ -183,7 +183,7 @@ namespace System.Collections.Generic
             for ( int i = index, end = index + length; i < end; i++ )
             {
                 var str = stringValueGetter.GetStringValue( objs[ i ] );
-                //if ( str == "ì.áàáèé" )
+                //if ( str == "Ð¼.Ð±Ð°Ð±Ð¸Ð¹" )
                 //System.Diagnostics.Debugger.Break();
                 //var __ = GetSuffix( i, str ).Distinct().ToArray();
                 foreach ( var _suffix in GetSuffixes_v2( i, str )/*.Distinct()*/ )
@@ -633,7 +633,7 @@ namespace System.Collections.Generic
 
         private static string CorrectFindSuffix( string suffix, FindModeEnum findMode )
         {
-            suffix = suffix.Replace( '¸', 'å' ).Replace( '¨', 'Å' );
+            suffix = suffix.Replace( 'Ñ‘', 'Ðµ' ).Replace( 'Ð', 'Ð•' );
 
             if ( findMode == FindModeEnum.IgnoreCase )
             {
