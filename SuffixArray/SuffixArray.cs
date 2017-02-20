@@ -180,7 +180,7 @@ namespace System.Collections.Generic
                                    ).Sum();
             var suffixIndex = 0;
             var suffixes = new suffix_t[ totalSuffixCount ];
-            for ( int i = index; i < length; i++ )
+            for ( int i = index, end = index + length; i < end; i++ )
             {
                 var str = stringValueGetter.GetStringValue( objs[ i ] );
                 //if ( str == "м.бабий" )
