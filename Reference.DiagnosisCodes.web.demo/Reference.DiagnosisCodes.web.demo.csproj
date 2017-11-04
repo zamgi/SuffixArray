@@ -19,6 +19,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,11 +58,6 @@
     <Content Include="rc\css\images\ui-bg_flat_75_ffffff_40x100.png" />
     <Content Include="rc\css\jquery-ui.css" />
     <Content Include="rc\css\style.css" />
-    <Content Include="rc\images\bg-btn.gif" />
-    <Content Include="rc\images\bg-h2.gif" />
-    <Content Include="rc\images\bg_html.png" />
-    <Content Include="rc\images\bg_html_rl.png" />
-    <Content Include="rc\images\btn_bg.gif" />
     <Content Include="rc\images\roller.gif" />
     <Content Include="rc\javascript\jquery-1.9.1.js" />
     <Content Include="rc\javascript\main.js" />

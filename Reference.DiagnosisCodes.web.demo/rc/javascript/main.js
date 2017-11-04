@@ -46,11 +46,6 @@ $(document).ready(function () {
         }
     });
 
-    $('#tableView').click(function () {
-        last_processing_suffix = null;
-        last_processing_maxCount = null;
-        processing( getSuffix() );
-    });
     $('#mainPageContent').on('click', '#processButton', function () {
         if ($(this).hasClass('disabled')) return (false);
         last_processing_suffix = null;
@@ -80,7 +75,6 @@ $(document).ready(function () {
         //processing_start();
         var startDatetime = new Date();
 
-        var _tableView = $('#tableView').is(':checked');
         $.ajax({
             type: "POST",
             url:  "SuffixArrayHandler.ashx",
@@ -101,10 +95,7 @@ $(document).ready(function () {
                 } else {
                     last_processing_suffix = tuples.suffix;
                     last_processing_maxCount = tuples.maxCount;
-                    if ( _tableView )                    
-                        tableView( $processResult, tuples, elapsedMilliseconds );
-                    else
-                        divView( $processResult, tuples, elapsedMilliseconds );
+                    tableView( $processResult, tuples, elapsedMilliseconds );
                 }
             },
             error: function () {
@@ -116,53 +107,6 @@ $(document).ready(function () {
         });
     };
 
-    function divView( $processResult, tuples, elapsedMilliseconds ) {
-        $processResult.removeClass('error').text('');
-        var _html = '';
-        if (tuples.values && tuples.values.length != 0) {
-            /*
-            tuples.values.sort(function (a, b) {
-                return (a.name < b.name) ? -1 : (a.name > b.name) ? 1 : 0;
-            });
-            */
-            
-            _html = 'delivered: <span class="border value">' + tuples.values.length + '</span>';
-            if (tuples.findTotalCount != tuples.values.length) {
-                _html += ', found: <span class="border value">' + tuples.findTotalCount + '</span>';
-            }
-            _html += ', suffix: <span class="border value">' + tuples.suffix + '</span>';
-            _html += ', (search elapsed: <span class="border value">' + elapsedMilliseconds + '</span> ms)';
-            $("#processHeader").html(_html);
-
-            var array = [];
-            for (var i = 0, len = tuples.values.length; i < len; i++) {
-                var value = tuples.values[i];
-                _html = '<div class="suggest"><span>' + (i + 1) + ']. </span>' +
-                        '<span class="id">' + value.id + '</span>' +
-                        ((value.suffixIdx != 0) ? ('<span class="suggest-query">' + value.name.substr(0, value.suffixIdx) + '</span>') : '') +
-                        '<span class="suggest-bold">' + value.name.substr(value.suffixIdx, tuples.suffix.length) + '</span>' +
-                        '<span class="suggest-query">' + value.name.substr(value.suffixIdx + tuples.suffix.length) + '</span>' +
-                        /*
-                        ', <span>' + value.type.toLowerCase() + '</span>' +
-                        ', <span class="suggest-city-name">' + value.city.name + '</span>' +
-                        ' <span>(' + value.city.type.toLowerCase() + ')</span>' +
-                        */
-                        '</div>';
-                array.push(_html);
-            }
-
-            if (tuples.findTotalCount != tuples.values.length)
-                _html = '<i>...more ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
-            else
-                _html = '';
-            $("#processFooter").html(_html);
-            _html = array.join('');
-        } else {
-            _html = '<div class="no-suggest">diagnoses with the suffix <span class="suggest-bold">\'' + tuples.suffix + '\'</span> not found in Reference.DiagnosisCodes</div>';
-        }
-        processing_end();
-        $processResult.html(_html);
-    };
     function tableView( $processResult, tuples, elapsedMilliseconds ) {
         $processResult.removeClass('error').text('');
         processing_end();
@@ -178,7 +122,7 @@ $(document).ready(function () {
             $('<tr> <th>#</th> <th>Id</th> <th>Diagnosis</th> </tr>').appendTo($table);
             for (var i = 0, len = tuples.values.length; i < len; i++) {
                 var value = tuples.values[i];
-                _html = '<tr class="suggest"><td>' + (i + 1) + ']. </td><td class="id">' +
+                _html = '<tr class="suggest"><td>' + (i + 1) + '. </td><td class="id">' +
                         value.id + '</td><td>' +
                         ((value.suffixIdx != 0) ? ('<span class="suggest-query">' + value.name.substr(0, value.suffixIdx) + '</span>') : '') +
                         '<span class="suggest-bold">' + value.name.substr(value.suffixIdx, tuples.suffix.length) + '</span>' +

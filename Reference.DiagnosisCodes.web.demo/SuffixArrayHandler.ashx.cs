@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 namespace Reference.DiagnosisCodes.web.demo
 {
     /// <summary>
-    /// Summary description for SuffixArrayHandler
+    /// 
     /// </summary>
     public sealed class SuffixArrayHandler : IHttpHandler
     {        
