@@ -48,7 +48,7 @@ h2.h-head { font-size:18px; background:#E6E6E6; line-height: 30px; padding-left:
 #periodsHeader {padding: 7px; border-radius: 3px; }
 .description-header {font-size: 0.8em; float:right;}
 .result-info {width: 630px; min-height: 20px; margin: 10px auto; text-align: center; color: #313131;}
-.result-info.error {color: #f00;}
+.error {color: #f00;}
 
 #processResult table {width: 100%; margin: 0 auto;}
 #processResult table td { /*padding: 5px 0;*/ border: 1px solid #aaa; text-align: left; white-space: nowrap; }

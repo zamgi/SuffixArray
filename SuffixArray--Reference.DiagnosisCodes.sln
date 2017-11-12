@@ -1,16 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reference.DiagnosisCodes.ConsoleApp", "Reference.DiagnosisCodes.ConsoleApp\Reference.DiagnosisCodes.ConsoleApp.csproj", "{B17C29AF-E052-413B-9149-4F49E5DA2571}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuffixArray", "SuffixArray\SuffixArray.csproj", "{47716B48-70CC-4A7F-808D-EEB07DA09899}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reference.DiagnosisCodes.web.demo", "Reference.DiagnosisCodes.web.demo\Reference.DiagnosisCodes.web.demo.csproj", "{EBE3919C-44D2-40A0-8214-48F1410E336B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "[lib]", "[lib]", "{A631FB58-4617-43D4-8405-3FAA240F8F04}"
-	ProjectSection(SolutionItems) = preProject
-		[lib]\Newtonsoft.Json.dll = [lib]\Newtonsoft.Json.dll
-	EndProjectSection
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPlusTree", "..\_NET2\{Data-Structure's}\BPlusTree\BPlusTree\BPlusTree.csproj", "{30F15951-F63D-4648-80E2-730037C64429}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +29,10 @@ Global
 		{EBE3919C-44D2-40A0-8214-48F1410E336B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EBE3919C-44D2-40A0-8214-48F1410E336B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EBE3919C-44D2-40A0-8214-48F1410E336B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F15951-F63D-4648-80E2-730037C64429}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F15951-F63D-4648-80E2-730037C64429}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F15951-F63D-4648-80E2-730037C64429}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F15951-F63D-4648-80E2-730037C64429}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

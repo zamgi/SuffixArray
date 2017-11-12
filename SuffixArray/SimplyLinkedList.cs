@@ -193,11 +193,11 @@ namespace System.Collections.Generic
 		{
             if ( array == null )
             {
-                throw new ArgumentNullException( "array" );
+                throw new ArgumentNullException( nameof(array) );
             }
             if ( index < 0 || index > array.Length )
             {
-                throw new ArgumentOutOfRangeException( "index", "IndexOutOfRange" );
+                throw new ArgumentOutOfRangeException( nameof(index), "IndexOutOfRange" );
             }
             if ( array.Length - index < Count )
             {
@@ -230,22 +230,22 @@ namespace System.Collections.Generic
                         next = next._Next;
                         if ( next == _Head )
                         {
-                            goto EXIT;
+                            return (null); //---goto EXIT;
                         }
                     }
-                    return next;
+                    return (next);
                 }
                 while ( next._Item != null )
                 {
                     next = next._Next;
                     if ( next == _Head )
                     {
-                        goto EXIT;
+                        return (null); //---goto EXIT;
                     }
                 }
                 return (next);
             }
-        EXIT:
+        //---EXIT:
 			return (null);
 		}
 		/// <summary>Returns an enumerator that iterates through the <see cref="T:System.Collections.Generic.LinkedList`1" />.</summary>
@@ -288,27 +288,27 @@ namespace System.Collections.Generic
 		///   <paramref name="array" /> is multidimensional.-or-<paramref name="array" /> does not have zero-based indexing.-or-The number of elements in the source <see cref="T:System.Collections.ICollection" /> is greater than the available space from <paramref name="index" /> to the end of the destination <paramref name="array" />.-or-The type of the source <see cref="T:System.Collections.ICollection" /> cannot be cast automatically to the type of the destination <paramref name="array" />.</exception>
 		void ICollection.CopyTo( Array array, int index )
 		{
-			if (array == null)
-			{
-				throw new ArgumentNullException("array");
-			}
-			if (array.Rank != 1)
-			{
-				throw new ArgumentException("Arg_MultiRank");
-			}
-			if (array.GetLowerBound(0) != 0)
-			{
-				throw new ArgumentException("Arg_NonZeroLowerBound");
-			}
-			if (index < 0)
-			{
-				throw new ArgumentOutOfRangeException("index", "IndexOutOfRange");
-			}
-			if (array.Length - index < _Count)
-			{
-				throw new ArgumentException("Arg_InsufficientSpace");
-			}
-			T[] array2 = array as T[];
+            if ( array == null )
+            {
+                throw new ArgumentNullException( nameof(array) );
+            }
+            if ( array.Rank != 1 )
+            {
+                throw (new ArgumentException( "Arg_MultiRank" ));
+            }
+            if ( array.GetLowerBound( 0 ) != 0 )
+            {
+                throw (new ArgumentException( "Arg_NonZeroLowerBound" ));
+            }
+            if ( index < 0 )
+            {
+                throw (new ArgumentOutOfRangeException( nameof(index), "IndexOutOfRange" ));
+            }
+            if ( array.Length - index < _Count )
+            {
+                throw (new ArgumentException( "Arg_InsufficientSpace" ));
+            }
+            T[] array2 = array as T[];
 			if (array2 != null)
 			{
 				CopyTo(array2, index);
@@ -316,32 +316,32 @@ namespace System.Collections.Generic
 			}
 			Type elementType = array.GetType().GetElementType();
 			Type typeFromHandle = typeof(T);
-			if (!elementType.IsAssignableFrom(typeFromHandle) && !typeFromHandle.IsAssignableFrom(elementType))
-			{
-				throw new ArgumentException("Invalid_Array_Type");
-			}
-			object[] array3 = array as object[];
-			if (array3 == null)
-			{
-				throw new ArgumentException("Invalid_Array_Type");
-			}
+            if ( !elementType.IsAssignableFrom( typeFromHandle ) && !typeFromHandle.IsAssignableFrom( elementType ) )
+            {
+                throw (new ArgumentException( "Invalid_Array_Type" ));
+            }
+			var array3 = array as object[];
+            if ( array3 == null )
+            {
+                throw (new ArgumentException( "Invalid_Array_Type" ));
+            }
 			SimplyLinkedListNode< T > next = _Head;
 			try
 			{
-				if (next != null)
-				{
+                if ( next != null )
+                {
 					do
 					{
-						array3[index++] = next._Item;
-						next = next._Next;
+                        array3[ index++ ] = next._Item;
+                        next = next._Next;
 					}
-					while (next != _Head);
-				}
+                    while ( next != _Head );
+                }
 			}
 			catch (ArrayTypeMismatchException)
 			{
-				throw new ArgumentException("Invalid_Array_Type");
-			}
+                throw (new ArgumentException( "Invalid_Array_Type" ));
+            }
 		}
 		/// <summary>Returns an enumerator that iterates through the linked list as a collection.</summary>
 		/// <returns>An <see cref="T:System.Collections.IEnumerator" /> that can be used to iterate through the linked list as a collection.</returns>

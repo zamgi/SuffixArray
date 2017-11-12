@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Web;
 
 using Newtonsoft.Json;
@@ -6,7 +7,7 @@ using Newtonsoft.Json;
 namespace Reference.DiagnosisCodes.web.demo
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public sealed class SuffixArrayHandler : IHttpHandler
     {        
@@ -77,7 +78,7 @@ namespace Reference.DiagnosisCodes.web.demo
             }
             catch ( Exception ex )
             {
-                System.Diagnostics.Debug.WriteLine( ex );
+                Debug.WriteLine( ex );
             }
         }
     }

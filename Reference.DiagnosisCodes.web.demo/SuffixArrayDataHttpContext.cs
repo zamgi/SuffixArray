@@ -20,6 +20,8 @@ namespace Reference.DiagnosisCodes.web.demo
     internal static class SuffixArrayDataHttpContext
     {
         private static readonly object _Lock = new object();
+        private static SuffixArray< tuple > _SuffixArray;
+        private static IList< tuple > _TupleData;
 
         public static SuffixArrayJsonResultParams Find( string suffix, int maxCount )
         {
@@ -177,8 +179,5 @@ namespace Reference.DiagnosisCodes.web.demo
             tuples.Capacity = tuples.Count;
             return (tuples);
         }
-
-        private static SuffixArray< tuple > _SuffixArray;
-        private static IList< tuple > _TupleData;
     }
 }

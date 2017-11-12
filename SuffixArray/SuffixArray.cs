@@ -1,15 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 
 namespace System.Collections.Generic
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public interface IStringValueGetter< T >
-    {
-        string GetStringValue( T obj );
-    }
-
     /// <summary>
     /// 
     /// </summary>
@@ -185,7 +178,7 @@ namespace System.Collections.Generic
                 //if ( str == "м.бабий" )
                 //System.Diagnostics.Debugger.Break();
                 //var __ = GetSuffix( i, str ).Distinct().ToArray();
-                foreach ( var _suffix in GetSuffixes_v2( i, str )/*.Distinct()*/ )
+                foreach ( var _suffix in GetSuffixes_v2( i, str ).Distinct() )
                 {
                     suffixes[ suffixIndex++ ] = _suffix;
                 }
@@ -226,7 +219,7 @@ namespace System.Collections.Generic
     /// 
     /// </summary>
     [Serializable]
-	public sealed class SuffixArray< T > : IEnumerable< SuffixArray< T >.find_result_t >
+	public sealed class SuffixArray< T > : SuffixArrayBase< T >, IEnumerable< SuffixArrayBase< T >.find_result_t >
 	{
         /// <summary>
         /// 
@@ -266,65 +259,6 @@ namespace System.Collections.Generic
 #endif
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public struct find_result_t
-        {
-            internal static readonly find_result_t[] EMPTY = new find_result_t[ 0 ];
-
-            internal static find_result_t Create( int objIndex, string word, int suffixIndex, int suffixLength )
-            {
-                var fr = new find_result_t() 
-                {
-                    ObjIndex     = objIndex, 
-                    Word         = word, 
-                    SuffixIndex  = suffixIndex, 
-                    SuffixLength = suffixLength 
-                };
-                return (fr);
-            }
-            /*internal static find_result_t Create( ref data_t data, string word, int suffixLength )
-            {
-                var fr = new find_result_t() 
-                {
-                    ObjIndex     = data.WordIndex, 
-                    Word         = word, 
-                    SuffixIndex  = data.SuffixIndex, 
-                    SuffixLength = suffixLength 
-                };
-                return (fr);
-            }*/
-
-            public int    ObjIndex;
-            public string Word;
-            public int    SuffixIndex;
-            public int    SuffixLength;
-
-            public string GetBeforeSuffix()
-            {
-                return (Word.Substring( 0, SuffixIndex ));
-            }
-            public string GetSuffix()
-            {
-                return (Word.Substring( SuffixIndex, SuffixLength ));
-            }
-            public string GetAfterSuffix()
-            {
-                return (Word.Substring( SuffixIndex + SuffixLength ));
-            }
-            public string GetHighlightSuffix( string left, string right )
-            {
-                return (string.Concat( GetBeforeSuffix(), left, GetSuffix(), right, GetAfterSuffix() ));
-            }
-#if DEBUG
-            public override string ToString()
-            {
-                return ('\'' + GetBeforeSuffix() + '[' + GetSuffix() + ']' + GetAfterSuffix() + '\'');
-            }
-#endif
-        }
-
 #if DEBUG
         public override string ToString()
         {
@@ -357,16 +291,7 @@ namespace System.Collections.Generic
             _Array             = SuffixArrayBuilder< T >.Build( objs, index, length, stringValueGetter );
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public enum FindModeEnum
-        {
-            IgnoreCase,
-            UseCase,
-        }
-
-        public IEnumerable< find_result_t > 
+        public override IEnumerable< find_result_t > 
             Find( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
@@ -413,7 +338,7 @@ namespace System.Collections.Generic
             }
         }
 
-        public int 
+        public override int 
             FindCount( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
@@ -458,7 +383,7 @@ namespace System.Collections.Generic
             return (findCount);
         }
 
-        public find_result_t[] 
+        public override find_result_t[] 
             Find( string suffix, int maxCount, out int findTotalCount, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
@@ -524,7 +449,7 @@ namespace System.Collections.Generic
 		/// <param name="suffix">The key to locate in the <see cref="T:System.Collections.Generic.sorted_list_key_char`2" />.</param>
 		/// <exception cref="T:System.ArgumentNullException">
 		///   <paramref name="suffix" /> is null.</exception>
-        public bool 
+        public override bool 
             ContainsKey( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
 		{
             suffix = CorrectFindSuffix( suffix, findMode );
@@ -533,8 +458,38 @@ namespace System.Collections.Generic
             return (n >= 0);
 		}
 
+        public override IEnumerable< string > GetAllSuffixes( EnumerableModeEnum enumerableMode )
+        {
+            for ( int i = 0, arrayLength = _Array.Length; i < arrayLength; i++ )
+            {
+                var suffix = _Array[ i ].Suffix;
+
+                yield return (suffix);
+
+                if ( enumerableMode == EnumerableModeEnum.AllSubSuffix )
+                {
+                    for ( int len = suffix.Length - 1; 1 <= len; len-- )
+                    {
+                        yield return (suffix.Substring( 0, len ));
+                    }
+                }
+            }
+        }
+        public override int GetAllSuffixesCount( EnumerableModeEnum enumerableMode )
+        {
+            var suffixCount = _Array.Length;
+            if ( enumerableMode == EnumerableModeEnum.AllSubSuffix )
+            {
+                for ( int i = 0, arrayLength = _Array.Length; i < arrayLength; i++ )
+                {
+                    suffixCount += _Array[ i ].Suffix.Length;
+                }
+            }
+            return (suffixCount);
+        }
+
         #region [.IEnumerable< tuple_t >.]
-        public IEnumerator< find_result_t > GetEnumerator()
+        public override IEnumerator< find_result_t > GetEnumerator()
         {
             for ( int i = 0, arrayLength = _Array.Length; i < arrayLength; i++ )
             {
@@ -556,45 +511,6 @@ namespace System.Collections.Generic
             return (GetEnumerator());
         }
         #endregion
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public enum EnumerableModeEnum
-        {
-            BaseOfSuffix,
-            AllSubSuffix,
-        }
-
-        public IEnumerable< string > GetAllSuffixes( EnumerableModeEnum enumerableMode )
-        {
-            for ( int i = 0, arrayLength = _Array.Length; i < arrayLength; i++ )
-            {
-                var suffix = _Array[ i ].Suffix;
-
-                yield return (suffix);
-
-                if ( enumerableMode == EnumerableModeEnum.AllSubSuffix )
-                {
-                    for ( int len = suffix.Length - 1; 1 <= len; len-- )
-                    {
-                        yield return (suffix.Substring( 0, len ));
-                    }
-                }
-            }
-        }
-        public int GetAllSuffixesCount( EnumerableModeEnum enumerableMode )
-        {
-            var suffixCount = _Array.Length;
-            if ( enumerableMode == EnumerableModeEnum.AllSubSuffix )
-            {
-                for ( int i = 0, arrayLength = _Array.Length; i < arrayLength; i++ )
-                {
-                    suffixCount += _Array[ i ].Suffix.Length;
-                }
-            }
-            return (suffixCount);
-        }
 
         private int InternalBinarySearch( string suffix4Find )
         {
