@@ -6,3 +6,5 @@ rd "SuffixArray\bin" /S/Q
 rd "SuffixArray\obj" /S/Q
 rd "Reference.DiagnosisCodes.ConsoleApp\bin" /S/Q
 rd "Reference.DiagnosisCodes.ConsoleApp\obj" /S/Q
+rd "BPlusTree\bin" /S/Q
+rd "BPlusTree\obj" /S/Q
