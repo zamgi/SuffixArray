@@ -1,0 +1,392 @@
+using System.Runtime;
+
+using SysArray = System.Array;
+
+namespace System.Collections.Generic
+{
+    /// <summary>
+    /// 
+    /// </summary>
+	internal class SortedList< T > : IEnumerable< T > //: IDictionary< string, T >, ICollection< KeyValuePair< string, T > >
+        //---where T : IComparable< T >
+	{
+        private const int MAX_CAPACITY_THRESHOLD = 0x7FFFFFFF /*int.MaxValue*/ - 0x400 * 0x400 /*1MB*/; /* => 2146435071 == 0x7fefffff*/
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public struct tuple_t
+        {
+            public T Value;
+#if DEBUG
+            public override string ToString()
+            {
+                return (Value.ToString());
+            }
+#endif
+        }
+
+#if DEBUG
+        public override string ToString()
+        {
+            if ( _Size == 0 )
+            {
+                return ("EMPTY");
+            }
+            return ($"count: {_Size}, min: '{_Array[ 0 ].Value}', max: '{_Array[ _Size - 1 ].Value}'");
+        }
+#endif
+        private static readonly tuple_t[] EMPTY_ARRAY = new tuple_t[ 0 ];
+
+        private tuple_t[] _Array;
+		private int       _Size;
+        private IComparer< T > _Comparer;
+
+        /*public SortedList< T > SplitInTwo()
+        {
+            var half = (_Size >> 1);
+            var other = new SortedList< T >( _Comparer )
+            {
+                _Array = new tuple_t[ _Array.Length ],
+                _Size  = half,
+            };
+            _Size -= half;
+            SysArray.Copy( _Array, _Size, other._Array, 0, half );
+            SysArray.Clear( _Array, _Size, half );
+
+            return (other);
+        }*/
+        public void SplitInTwo< X >( X other )
+            where X : SortedList< T >
+        {
+            var half = (_Size >> 1);
+
+            other._Comparer = _Comparer;
+            other._Array    = new tuple_t[ _Array.Length ];
+            other._Size     = half;
+
+            _Size -= half;
+            SysArray.Copy( _Array, _Size, other._Array, 0, half );
+            SysArray.Clear( _Array, _Size, half );
+
+            //return (other);
+        }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public int CompareWith4_SortedBlockList( T value )
+        {
+            var d = _Comparer.Compare( this.Min, value );
+            if ( 0 <= d ) //value < Min
+                return (d);
+            //d < 0 
+            return (_Comparer.Compare( this.Max, value ));
+        }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public int CompareWith4_SortedBlockSet( T value )
+        {
+            var d = _Comparer.Compare( this.Min, value );
+            if ( 0 <= d ) //value < Min
+                return (d);
+
+            d = _Comparer.Compare( this.Max, value );
+            return (0 <= d ? 0 : d); //if {value <= Max} => {0 <= d} => 0, else => d;
+        }
+
+        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+        public int CompareOtherWith4_BPlusTreeBlock( SortedList< T > other )
+        {
+            if ( this.Count != 0 )
+            {
+                if ( other.Count != 0 )
+                {
+                    return (_Comparer.Compare( this.Max, other.Min ));
+                }
+                return (1);
+            }
+            if ( other.Count != 0 )
+            {
+                return (-1);
+            }
+            return (0);
+        }
+
+
+        public int Capacity
+		{
+			get { return (_Array.Length); }
+			private set
+			{
+                if ( value != _Array.Length )
+				{
+					/*if (value < _Size)
+					{
+						throw new ArgumentOutOfRangeException("value");
+					}*/
+                    if ( 0 < value )
+					{
+                        var destinationArray = new tuple_t[ value ];
+                        if ( 0 < _Size )
+						{
+                            SysArray.Copy( _Array, 0, destinationArray, 0, _Size );
+						}
+                        _Array = destinationArray;
+					}
+                    else
+                    {
+                        _Array = EMPTY_ARRAY;
+                    }
+				}
+			}
+		}
+		public int Count
+		{
+			[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+			get { return _Size; }
+		}
+
+		public T this[ int index ]
+		{
+			get { return _Array[ index ].Value; }
+		}
+        public T Min
+        {
+            [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+            get
+            {
+                //---if ( _Size == 0 ) throw (new InvalidOperationException());
+
+                return (_Array[ 0 ].Value);
+            }
+        }
+        public T Max
+        {
+            [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
+            get
+            {
+                //---if ( _Size == 0 ) throw (new InvalidOperationException());
+
+                return (_Array[ _Size - 1 ].Value);
+            }
+        }
+
+        protected SortedList()
+        {
+        }
+        private SortedList( IComparer< T > comparer )
+        {
+            _Comparer = comparer;
+        }
+        public SortedList( IComparer< T > comparer, int capacity )
+		{
+            _Comparer = comparer;
+            _Array = (capacity == 0) ? EMPTY_ARRAY : new tuple_t[ capacity ];
+            _Size  = 0;
+		}
+        public SortedList( IComparer< T > comparer, int capacity, T t )
+        {
+            _Comparer = comparer;
+            _Array = new tuple_t[ capacity ];
+            _Array[ 0 ] = new tuple_t() { Value = t };
+            _Size  = 1;
+        }
+        /*public SortedList( int capacity, T t1, T t2 )
+        {
+            _Array = new tuple_t[ capacity ];
+            _Array[ 0 ] = new tuple_t() { Value = t1 };
+            _Array[ 1 ] = new tuple_t() { Value = t2 };
+            _Size  = 2;
+        }*/
+	
+        public void Add( T value )
+		{
+            var index = InternalBinarySearch( value ); 
+            if ( 0 <= index )
+			{
+				//ThrowHelper.ThrowArgumentException(ExceptionResource.Argument_AddingDuplicate);
+                throw (new ArgumentException(index.ToString(), nameof(index)));
+			}
+            Insert( ~index, value );
+		}
+        public bool TryAdd( T value )
+		{
+            var index = InternalBinarySearch( value );
+            if ( 0 <= index )
+			{
+                return (false);
+			}
+            Insert( ~index, value );
+            return (true);
+		}
+		public void Clear()
+		{
+            SysArray.Clear( _Array, 0, _Size );
+			_Size = 0;
+		}
+        public bool Contains( T value )
+		{
+            return (0 <= IndexOfKey( value ));
+		}
+
+        public int IndexOfKey( T value )
+		{
+            int index = InternalBinarySearch( value );
+            if ( index < 0 )
+            {
+                return (-1);
+            }
+			return (index);
+		}
+        public int IndexOfKeyCore( T value )
+        {
+            int index = InternalBinarySearch( value );
+            return (index);
+        }
+        private void Insert( int index, T value )
+        {
+            if ( _Size == _Array.Length )
+            {
+                EnsureCapacity( _Size + 1 );
+            }
+            if ( index < _Size )
+            {
+                SysArray.Copy( _Array, index, _Array, index + 1, _Size - index );
+            }
+            _Array[ index ] = new tuple_t() { Value = value };
+            _Size++;
+        }
+
+		public bool TryGetValue( T value, out T existsValue )
+		{
+            int index = IndexOfKey( value );
+            if ( 0 <= index )
+			{
+                existsValue = _Array[ index ].Value;
+				return (true);
+			}
+            existsValue = default(T);
+			return (false);
+		}
+		public void RemoveAt( int index )
+		{
+            if ( index < 0 || _Size <= index )
+			{
+				throw (new ArgumentOutOfRangeException( nameof(index) ));
+			}
+			_Size--;
+            if ( index < _Size )
+			{
+                SysArray.Copy( _Array, index + 1, _Array, index, _Size - index );
+			}
+			_Array[ _Size ] = default(tuple_t);
+		}
+		public bool Remove( T value )
+		{
+            int index = IndexOfKey( value );
+            if ( 0 <= index )
+            {
+                RemoveAt( index );
+            }
+            return (0 <= index);
+		}
+
+		public void TrimExcess()
+		{
+            int size = (int) ((double) _Array.Length * 0.9);
+            if ( _Size < size )
+            {
+                Capacity = _Size;
+            }
+		}
+        public void Trim()
+        {
+            Capacity = _Size;
+        }
+
+        private void EnsureCapacity( int min )
+		{
+            /*int capacity;
+            switch ( _Array.Length )
+            {
+                case 0:  capacity = 1; break;
+                case 1:  capacity = 16; break;
+                default: capacity = _Array.Length * 2; break;
+            }
+            */
+            /*int capacity = (_Array.Length == 0) ? DEFAULT_CAPACITY : (_Array.Length * 2);
+            */
+
+            int capacity = (_Array.Length << 1);
+            if ( MAX_CAPACITY_THRESHOLD < capacity )
+			{
+                capacity = MAX_CAPACITY_THRESHOLD;
+			}
+            if ( capacity < min )
+            {
+                capacity = min;
+            }
+			Capacity = capacity;
+		}
+
+        private int InternalBinarySearch( T value )
+        {
+            int i = 0;
+            for ( var endIndex = _Size - 1; i <= endIndex; )
+            {
+                int middleIndex = i + ((endIndex - i) >> 1);
+                int d = _Comparer.Compare( _Array[ middleIndex ].Value, value );
+                if ( d == 0 )
+                {
+                    return (middleIndex);
+                }
+
+                if ( d < 0 )
+                {
+                    i = middleIndex + 1;
+                }
+                else
+                {
+                    endIndex = middleIndex - 1;
+                }
+            }
+            return (~i);
+        }
+        /*private static int InternalBinarySearch( IComparer< T > comparer, tuple_t[] array, int index, int length, T value )
+        {
+            int i = index;
+            for ( var endIndex = index + length - 1; i <= endIndex; )
+            {
+                int middleIndex = i + ((endIndex - i) >> 1);
+                int d = comparer.Compare( array[ middleIndex ].Value, value );
+                if ( d == 0 )
+                {
+                    return (middleIndex);
+                }
+
+                if ( d < 0 )
+                {
+                    i = middleIndex + 1;
+                }
+                else
+                {
+                    endIndex = middleIndex - 1;
+                }
+            }
+            return (~i);
+        }*/
+
+        #region [.IEnumerable< T >.]
+        public IEnumerator< T > GetEnumerator()
+        {
+            for ( int i = 0; i < _Size; i++ )
+            {
+                yield return (_Array[ i ].Value);
+            }
+        }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return (GetEnumerator());
+        }
+        #endregion
+    }
+}

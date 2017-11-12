@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SuffixArray", "SuffixArray\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Reference.DiagnosisCodes.web.demo", "Reference.DiagnosisCodes.web.demo\Reference.DiagnosisCodes.web.demo.csproj", "{EBE3919C-44D2-40A0-8214-48F1410E336B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPlusTree", "..\_NET2\{Data-Structure's}\BPlusTree\BPlusTree\BPlusTree.csproj", "{30F15951-F63D-4648-80E2-730037C64429}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPlusTree", "BPlusTree\BPlusTree.csproj", "{30F15951-F63D-4648-80E2-730037C64429}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

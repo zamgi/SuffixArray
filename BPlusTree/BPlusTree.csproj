@@ -1,17 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{47716B48-70CC-4A7F-808D-EEB07DA09899}</ProjectGuid>
+    <ProjectGuid>{30F15951-F63D-4648-80E2-730037C64429}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SuffixArray</RootNamespace>
-    <AssemblyName>SuffixArray</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <RootNamespace>System.Collections.Generic</RootNamespace>
+    <AssemblyName>BPlusTree</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,7 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -31,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
@@ -39,20 +38,23 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Set.cs" />
-    <Compile Include="SuffixArray_v2.cs" />
-    <Compile Include="IStringValueGetter.cs" />
-    <Compile Include="SuffixArrayBase.cs" />
-    <Compile Include="SimplyLinkedList.cs" />
+    <Compile Include="BPlusTreeList\BPlusTreeList[T].cs" />
+    <Compile Include="BPlusTreeSet\BPlusTreeSet[T].cs" />
+    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\ArrayBuilder[T].cs" />
+    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\BitHelper.cs" />
+    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\EnumerableHelpers.cs" />
+    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\ICollectionDebugView[T].cs" />
+    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\LargeArrayBuilder[T].cs" />
+    <Compile Include="BPlusTreeSet\SortedSetEx\SortedSetEx[T].cs" />
+    <Compile Include="Common\BPlusTreeBlock[T].cs" />
+    <None Include="Common\%28BPlusTreeBlock[T].cs%29" />
+    <Compile Include="Common\SortedList[T].cs" />
+    <Compile Include="IBPlusTree[T].cs" />
+    <Compile Include="IBPlusTreeComparer[T].cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SuffixArray.cs" />
+    <None Include="Common\%28SortedList[T].cs%29" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\BPlusTree\BPlusTree.csproj">
-      <Project>{30f15951-f63d-4648-80e2-730037c64429}</Project>
-      <Name>BPlusTree</Name>
-    </ProjectReference>
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
