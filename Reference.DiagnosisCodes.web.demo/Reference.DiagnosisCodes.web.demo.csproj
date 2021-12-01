@@ -13,7 +13,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Reference.DiagnosisCodes.web.demo</RootNamespace>
     <AssemblyName>Reference.DiagnosisCodes.web.demo</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <LangVersion>latest</LangVersion>
     <UseIISExpress>false</UseIISExpress>
     <IISExpressSSLPort />
     <IISExpressAnonymousAuthentication />
@@ -21,6 +22,7 @@
     <IISExpressUseClassicPipelineMode />
     <UseGlobalApplicationHostFile />
     <TargetFrameworkProfile />
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -74,14 +76,14 @@
   <ItemGroup>
     <Compile Include="App_Code\tuple.cs" />
     <Compile Include="SuffixArrayDataHttpContext.cs" />
-    <Compile Include="SuffixArrayHandler.ashx.cs">
-      <DependentUpon>SuffixArrayHandler.ashx</DependentUpon>
+    <Compile Include="ProcessHandler.ashx.cs">
+      <DependentUpon>ProcessHandler.ashx</DependentUpon>
     </Compile>
     <Compile Include="SuffixArrayJsonResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="SuffixArrayHandler.ashx" />
+    <Content Include="ProcessHandler.ashx" />
     <Content Include="packages.config" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

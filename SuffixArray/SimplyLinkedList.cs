@@ -1,4 +1,3 @@
-using System;
 using System.Runtime;
 
 namespace System.Collections.Generic
@@ -6,7 +5,6 @@ namespace System.Collections.Generic
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
 	internal sealed class SimplyLinkedListNode< T >
 	{
 		internal SimplyLinkedListNode< T > _Next;
@@ -50,7 +48,6 @@ namespace System.Collections.Generic
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
     internal sealed class SimplyLinkedList< T > : ICollection< T >, IEnumerable< T >, ICollection, IEnumerable
 	{
         /// <summary>

@@ -33,10 +33,8 @@ namespace System.Collections.Generic
     // For a detailed description of the algorithm, take a look at "Algorithm" by Rebert Sedgewick.
     //
 
-    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix", Justification = "by design name choice")]
     [DebuggerTypeProxy( typeof(ICollectionDebugView<>) )]
     [DebuggerDisplay("Count = {Count}")]
-    [Serializable]
     internal class SortedSetEx< T > : ISet< T >, ICollection< T >, ICollection, ISerializable, IDeserializationCallback/*, IReadOnlyCollection< T >*/
     {
         #region [.local variables/constants.]
@@ -1896,8 +1894,6 @@ namespace System.Collections.Generic
         /// This class represents a subset view into the tree. Any changes to this view
         /// are reflected in the actual tree. Uses the Comparator of the underlying tree.
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        [Serializable]
         private sealed class TreeSubSet : SortedSetEx< T >, ISerializable, IDeserializationCallback
         {
             private SortedSetEx< T > _underlying;
@@ -2342,7 +2338,6 @@ namespace System.Collections.Generic
         /// <summary>
         /// 
         /// </summary>
-        [Serializable]
         public sealed class Node
         {
             public Node Left;
@@ -2367,8 +2362,6 @@ namespace System.Collections.Generic
         /// <summary>
         /// 
         /// </summary>
-        [SuppressMessage( "Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "not an expected scenario" )]
-        [Serializable]
         public struct Enumerator : IEnumerator< T >, IEnumerator, ISerializable, IDeserializationCallback
         {
             private SortedSetEx< T > _tree;

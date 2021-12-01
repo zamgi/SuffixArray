@@ -77,7 +77,7 @@ $(document).ready(function () {
 
         $.ajax({
             type: "POST",
-            url:  "SuffixArrayHandler.ashx",
+            url:  "ProcessHandler.ashx",
             data: {
                 suffix  : suffix,
                 maxCount: maxCount
@@ -186,7 +186,7 @@ $(document).ready(function () {
     function force_load_model() {
         $.ajax({
             type: "POST",
-            url: "SuffixArrayHandler.ashx",
+            url: "ProcessHandler.ashx",
             data: { suffix: "_dummy_" }
         });
     };

@@ -22,7 +22,6 @@ namespace Reference.DiagnosisCodes.ConsoleApp
     /// </summary>
     internal static class Program
     {
-        [Serializable]
         private sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
         {
             public string GetStringValue( tuple t )
@@ -31,7 +30,6 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             }                
         }
 
-        [Serializable]
         private struct tuple
         {
             public int    Id   { get; private set; }

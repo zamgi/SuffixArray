@@ -9,7 +9,7 @@ namespace Reference.DiagnosisCodes.web.demo
     /// <summary>
     ///
     /// </summary>
-    public sealed class SuffixArrayHandler : IHttpHandler
+    public sealed class ProcessHandler : IHttpHandler
     {        
         public bool IsReusable
         {

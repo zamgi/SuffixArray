@@ -218,13 +218,11 @@ namespace System.Collections.Generic
     /// <summary>
     /// 
     /// </summary>
-    [Serializable]
 	public sealed class SuffixArray< T > : SuffixArrayBase< T >, IEnumerable< SuffixArrayBase< T >.find_result_t >
 	{
         /// <summary>
         /// 
         /// </summary>
-        [Serializable]
         internal struct data_t
         {
             public data_t( int suffixIndex, int objIndex )
@@ -246,7 +244,6 @@ namespace System.Collections.Generic
         /// <summary>
         /// 
         /// </summary>
-        [Serializable]
         internal struct tuple_t
         {
             public string Suffix;
