@@ -68,13 +68,13 @@
     <Content Include="rc\css\jquery-ui.css" />
     <Content Include="rc\css\style.css" />
     <Content Include="rc\images\roller.gif" />
-    <Content Include="rc\javascript\jquery-1.9.1.js" />
-    <Content Include="rc\javascript\main.js" />
-    <Content Include="rc\javascript\jquery-ui.min.js" />
+    <Content Include="rc\js\jquery-1.9.1.js" />
+    <Content Include="rc\js\main.js" />
+    <Content Include="rc\js\jquery-ui.min.js" />
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Code\tuple.cs" />
+    <Compile Include="AppCodes\tuple.cs" />
     <Compile Include="SuffixArrayDataHttpContext.cs" />
     <Compile Include="ProcessHandler.ashx.cs">
       <DependentUpon>ProcessHandler.ashx</DependentUpon>

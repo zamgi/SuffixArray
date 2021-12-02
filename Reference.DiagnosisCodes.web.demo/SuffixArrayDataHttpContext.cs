@@ -58,7 +58,7 @@ namespace Reference.DiagnosisCodes.web.demo
                     if ( sa == null )
                     {
                         {
-                            sa = new SuffixArray< tuple >( tuples, new tupleIStringValueGetter() );
+                            sa = new SuffixArray< tuple >( tuples, new tupleStringValueGetter() );
                             _SuffixArray = sa;
                         }
                         {
@@ -72,8 +72,7 @@ namespace Reference.DiagnosisCodes.web.demo
             #endregion
 
             #region [.find suffix in tuple-data.]
-            var findTotalCount = default(int);
-            var frs = sa.Find( suffix, maxCount, out findTotalCount );
+            var frs = sa.Find( suffix, maxCount, out var findTotalCount );
             #endregion
 
             #region commented

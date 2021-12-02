@@ -28,27 +28,12 @@ namespace Reference.DiagnosisCodes.web.demo
         /// </summary>
         public struct value_t
         {
-            [JsonProperty(PropertyName="id")]        public int    Id
-            {
-                get;
-                set;
-            }
-            [JsonProperty(PropertyName="name")]      public string Name
-            {
-                get;
-                set;
-            }
-            [JsonProperty(PropertyName="suffixIdx")] public int    SuffixIndex
-            {
-                get;
-                set;
-            }
+            [JsonProperty(PropertyName="id")]        public int    Id { get; set; }
+            [JsonProperty(PropertyName="name")]      public string Name { get; set; }
+            [JsonProperty(PropertyName="suffixIdx")] public int    SuffixIndex { get; set; }
         }
 
-        public SuffixArrayJsonResult( Exception ex )
-        {
-            ExceptionMessage = ex.ToString();
-        }
+        public SuffixArrayJsonResult( Exception ex ) => ExceptionMessage = ex.ToString();
         public SuffixArrayJsonResult( SuffixArrayJsonResultParams p )
         {
             Suffix         = p.suffix;
@@ -67,30 +52,10 @@ namespace Reference.DiagnosisCodes.web.demo
             }
         }
 
-        [JsonProperty(PropertyName = "err")]            public string ExceptionMessage
-        {
-            get;
-            private set;
-        }
-        [JsonProperty(PropertyName = "suffix")]         public string Suffix
-        {
-            get;
-            private set;
-        }
-        [JsonProperty(PropertyName = "maxCount")]       public int MaxCount
-        {
-            get;
-            private set;
-        }
-        [JsonProperty(PropertyName = "findTotalCount")] public int FindTotalCount
-        {
-            get;
-            private set;
-        }        
-        [JsonProperty(PropertyName = "values")]         public value_t[] Values
-        {
-            get;
-            private set;
-        }
+        [JsonProperty(PropertyName = "err")]            public string ExceptionMessage { get; }
+        [JsonProperty(PropertyName = "suffix")]         public string Suffix { get; }
+        [JsonProperty(PropertyName = "maxCount")]       public int MaxCount { get; }
+        [JsonProperty(PropertyName = "findTotalCount")] public int FindTotalCount { get; }
+        [JsonProperty(PropertyName = "values")]         public value_t[] Values { get; }
     }
 }

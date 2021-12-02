@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace Reference.DiagnosisCodes.web.demo
@@ -7,12 +6,9 @@ namespace Reference.DiagnosisCodes.web.demo
     /// <summary>
     /// 
     /// </summary>
-    internal sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
+    internal sealed class tupleStringValueGetter : IStringValueGetter< tuple >
     {
-        public string GetStringValue( tuple t )
-        {
-            return (t.Text);
-        }
+        public string GetStringValue( tuple t ) => t.Text;
     }
 
     /// <summary>
