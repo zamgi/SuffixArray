@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace System.Collections.Generic
+﻿namespace System.Collections.Generic
 {
     /// <summary>
     /// 
@@ -32,55 +30,32 @@ namespace System.Collections.Generic
         {
             internal static readonly find_result_t[] EMPTY = new find_result_t[ 0 ];
 
-            internal static find_result_t Create( int objIndex, string word, int suffixIndex, int suffixLength )
+            internal static find_result_t Create( int objIndex, string word, int suffixIndex, int suffixLength ) => new find_result_t() 
             {
-                var fr = new find_result_t() 
-                {
-                    ObjIndex     = objIndex, 
-                    Word         = word, 
-                    SuffixIndex  = suffixIndex, 
-                    SuffixLength = suffixLength 
-                };
-                return (fr);
-            }
-            /*internal static find_result_t Create( ref data_t data, string word, int suffixLength )
+                ObjIndex     = objIndex, 
+                Word         = word, 
+                SuffixIndex  = suffixIndex, 
+                SuffixLength = suffixLength 
+            };
+            /*internal static find_result_t Create( ref data_t data, string word, int suffixLength ) => new find_result_t() 
             {
-                var fr = new find_result_t() 
-                {
-                    ObjIndex     = data.WordIndex, 
-                    Word         = word, 
-                    SuffixIndex  = data.SuffixIndex, 
-                    SuffixLength = suffixLength 
-                };
-                return (fr);
-            }*/
+                ObjIndex     = data.WordIndex, 
+                Word         = word, 
+                SuffixIndex  = data.SuffixIndex, 
+                SuffixLength = suffixLength 
+            };*/
 
             public int    ObjIndex;
             public string Word;
             public int    SuffixIndex;
             public int    SuffixLength;
 
-            public string GetBeforeSuffix()
-            {
-                return (Word.Substring( 0, SuffixIndex ));
-            }
-            public string GetSuffix()
-            {
-                return (Word.Substring( SuffixIndex, SuffixLength ));
-            }
-            public string GetAfterSuffix()
-            {
-                return (Word.Substring( SuffixIndex + SuffixLength ));
-            }
-            public string GetHighlightSuffix( string left, string right )
-            {
-                return (string.Concat( GetBeforeSuffix(), left, GetSuffix(), right, GetAfterSuffix() ));
-            }
+            public string GetBeforeSuffix() => Word.Substring( 0, SuffixIndex );
+            public string GetSuffix() => Word.Substring( SuffixIndex, SuffixLength );
+            public string GetAfterSuffix() => Word.Substring( SuffixIndex + SuffixLength );
+            public string GetHighlightSuffix( string left, string right ) => string.Concat( GetBeforeSuffix(), left, GetSuffix(), right, GetAfterSuffix() );
 #if DEBUG
-            public override string ToString()
-            {
-                return ('\'' + GetBeforeSuffix() + '[' + GetSuffix() + ']' + GetAfterSuffix() + '\'');
-            }
+            public override string ToString() => ('\'' + GetBeforeSuffix() + '[' + GetSuffix() + ']' + GetAfterSuffix() + '\'');
 #endif
         }
 
@@ -91,9 +66,6 @@ namespace System.Collections.Generic
         public abstract IEnumerable< string > GetAllSuffixes( EnumerableModeEnum enumerableMode );
         public abstract int GetAllSuffixesCount( EnumerableModeEnum enumerableMode );
         public abstract IEnumerator< find_result_t > GetEnumerator();
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (GetEnumerator());
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     }
 }

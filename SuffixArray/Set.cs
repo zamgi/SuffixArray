@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 
 namespace System.Collections.Generic
 {
     /// <summary>
     /// 
     /// </summary>
-    internal sealed class Set< T >
-        where T: struct
+    internal sealed class Set< T > where T: struct
     {
         /// <summary>
         /// 
         /// </summary>
         internal struct Slot
         {
-            internal int hashCode;
-            internal T   value;
-            internal int next;
+            internal int HashCode;
+            internal T   Value;
+            internal int Next;
         }
 
         private const int DEFAULT_CAPACITY = 7;
@@ -31,25 +25,12 @@ namespace System.Collections.Generic
         private int                    _FreeList;
         private IEqualityComparer< T > _Comparer;
 
-        internal Slot[] Slots
-        {
-            get { return (_Slots); }
-        }
-        public int Count
-        {
-            get { return (_Count); }
-        }
+        internal Slot[] Slots => _Slots;
+        public int Count => _Count;
 
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        public Set() : this( DEFAULT_CAPACITY, null )
-        {
-        }
-        public Set( IEqualityComparer< T > comparer ) : this( DEFAULT_CAPACITY, comparer )
-        {
-        }
-        public Set( int capacity ) : this( capacity, null )
-        {
-        }
+        public Set() : this( DEFAULT_CAPACITY, null ) { }
+        public Set( IEqualityComparer< T > comparer ) : this( DEFAULT_CAPACITY, comparer ) { }
+        public Set( int capacity ) : this( capacity, null ) { }
         public Set( int capacity, IEqualityComparer< T > comparer )
         {
             _Comparer = comparer ?? EqualityComparer< T >.Default;
@@ -64,12 +45,12 @@ namespace System.Collections.Generic
             int hash = (_Comparer.GetHashCode( value ) & 0x7FFFFFFF); //--- InternalGetHashCode( ref value );
             for ( int i = _Buckets[ hash % _Buckets.Length ] - 1; 0 <= i; /*i = _Slots[ i ].next*/ )
             {
-                var slot = _Slots[ i ];
-                if ( (slot.hashCode == hash) && _Comparer.Equals( slot.value, value ) )
+                ref readonly var slot = ref _Slots[ i ];
+                if ( (slot.HashCode == hash) && _Comparer.Equals( slot.Value, value ) )
                 {
                     return (false);
                 }
-                i = slot.next;
+                i = slot.Next;
             }
             #endregion
 
@@ -78,7 +59,8 @@ namespace System.Collections.Generic
             if ( 0 <= _FreeList )
             {
                 index = _FreeList;
-                _FreeList = _Slots[ index ].next;
+                ref readonly var slot = ref _Slots[ index ];
+                _FreeList = slot.Next;
             }
             else
             {
@@ -92,9 +74,9 @@ namespace System.Collections.Generic
             int bucket = hash % _Buckets.Length;
             _Slots[ index ] = new Slot() 
             {
-                hashCode = hash,
-                value    = value,
-                next     = _Buckets[ bucket ] - 1,
+                HashCode = hash,
+                Value    = value,
+                Next     = _Buckets[ bucket ] - 1,
             };
             _Buckets[ bucket ] = index + 1;
 
@@ -112,30 +94,34 @@ namespace System.Collections.Generic
 
         private void Resize()
         {
-            int newSize = checked( _Count * 2 + 1 );
-            int[]  newBuckets = new int[ newSize ];
-            Slot[] newSlots   = new Slot[ newSize ];
+            var newSize    = checked( _Count * 2 + 1 );
+            var newBuckets = new int[ newSize ];
+            var newSlots   = new Slot[ newSize ];
             Array.Copy( _Slots, 0, newSlots, 0, _Count );
             for ( int i = 0; i < _Count; i++ )
             {
-                int bucket = newSlots[ i ].hashCode % newSize;
-                newSlots[ i ].next = newBuckets[ bucket ] - 1;
+                ref var slot = ref newSlots[ i ];
+
+                int bucket = slot.HashCode % newSize;
+                slot.Next = newBuckets[ bucket ] - 1;
                 newBuckets[ bucket ] = i + 1;
+
+                /*
+                int bucket = newSlots[ i ].HashCode % newSize;
+                newSlots[ i ].Next = newBuckets[ bucket ] - 1;
+                newBuckets[ bucket ] = i + 1;
+                */
             }
             _Buckets = newBuckets;
             _Slots   = newSlots;
         }
 
-        //[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-        //public bool Contains( T value )
-        //{
-        //    return (Find( value, false ));
-        //}
+        //public bool Contains( T value ) => Find( value, false );
         //public bool Remove( T value )
         //{
-        //  int hash = InternalGetHashCode( value );
-        //    int bucket = hash % _Buckets.Length;
-        //    int last = -1;
+        //  int hash   = InternalGetHashCode( value );
+        //  int bucket = hash % _Buckets.Length;
+        //  int last   = -1;
         //  for ( int i = _Buckets[ bucket ] - 1; 0 <= i; /*i = _Slots[ i ].next*/ )
         //    {
         //      var slot = _Slots[ i ];
@@ -163,6 +149,7 @@ namespace System.Collections.Generic
         //    }
         //    return (false);
         //}
+
         //private bool Find( T value, bool add )
         //{
         //    int hash = InternalGetHashCode( value );
@@ -205,6 +192,7 @@ namespace System.Collections.Generic
 
         //    return (false);
         //}
+
         //private int InternalGetHashCode( ref T value )
         //{
         //    return (_Comparer.GetHashCode( value ) & 0x7FFFFFFF);

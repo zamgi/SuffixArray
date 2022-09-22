@@ -8,9 +8,7 @@ namespace System.Collections.Generic
     /// </summary>
     internal sealed class SortedBlockList< T > : SortedList< BPlusTreeBlock< T > >
     {
-        public SortedBlockList( int capacity ) : base( BPlusTreeBlock< T >.BlockComparer.Inst, capacity )
-        {
-        }
+        public SortedBlockList( int capacity ) : base( BPlusTreeBlock< T >.BlockComparer.Inst, capacity ) { }
 
         public int BinarySearch( T value )
         {
@@ -57,15 +55,11 @@ namespace System.Collections.Generic
         private const int DEFAULT_BLOCK_CAPACITY     = 100;
 
         private SortedBlockList< T > _SortedBlockList;
-        private int _BlockCapacity;
-        private IComparer< T > _Comparer;
+        private int                  _BlockCapacity;
+        private IComparer< T >       _Comparer;
 
-        public BPlusTreeList( IComparer< T > comparer ) : this( comparer, DEFAULT_BLOCKLIST_CAPACITY, DEFAULT_BLOCK_CAPACITY )
-        {
-        }
-        public BPlusTreeList( IComparer< T > comparer, int blockCapacity ) : this( comparer, DEFAULT_BLOCKLIST_CAPACITY, blockCapacity )
-        {
-        }
+        public BPlusTreeList( IComparer< T > comparer ) : this( comparer, DEFAULT_BLOCKLIST_CAPACITY, DEFAULT_BLOCK_CAPACITY ) { }
+        public BPlusTreeList( IComparer< T > comparer, int blockCapacity ) : this( comparer, DEFAULT_BLOCKLIST_CAPACITY, blockCapacity ) { }
         public BPlusTreeList( IComparer< T > comparer, int blockListCapacity, int blockCapacity )
         {
             _Comparer        = comparer;
@@ -593,18 +587,9 @@ namespace System.Collections.Generic
             #endregion
         }
 
-        public int GetCount()
-        {
-            return (_SortedBlockList.Sum( block => block.Count ));
-        }
-        public int Count
-        {
-            get { return (GetCount()); }
-        }
-        public int BlockCount
-        {
-            get { return (_SortedBlockList.Count); }
-        }
+        public int GetCount() => _SortedBlockList.Sum( block => block.Count );
+        public int Count => GetCount();
+        public int BlockCount => _SortedBlockList.Count;
 
         public void Trim()
         {
@@ -625,15 +610,9 @@ namespace System.Collections.Generic
                 }
             }
         }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (GetEnumerator());
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 #if DEBUG
-        public override string ToString()
-        {
-            return (_SortedBlockList.ToString());
-        }
+        public override string ToString() => _SortedBlockList.ToString();
 #endif
     }
 }

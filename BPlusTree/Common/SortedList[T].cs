@@ -1,7 +1,5 @@
 //#define USE_MIN_MAX_VARIABLES
 
-using System.Runtime;
-
 using SysArray = System.Array;
 
 namespace System.Collections.Generic
@@ -12,16 +10,6 @@ namespace System.Collections.Generic
 	internal class SortedList< T > : IEnumerable< T > //: IDictionary< string, T >, ICollection< KeyValuePair< string, T > >
 	{
         private const int MAX_CAPACITY_THRESHOLD = 0x7FFFFFFF /*int.MaxValue*/ - 0x400 * 0x400 /*1MB*/; /* => 2146435071 == 0x7fefffff*/
-#if DEBUG
-        public override string ToString()
-        {
-            if ( _Size == 0 )
-            {
-                return ("EMPTY");
-            }
-            return ($"count: {_Size}, min: '{_Array[ 0 ]}', max: '{_Array[ _Size - 1 ]}'");
-        }
-#endif
         private static readonly T[] EMPTY_ARRAY = new T[ 0 ];
 
         private T[] _Array;
@@ -31,6 +19,24 @@ namespace System.Collections.Generic
         private T _Min;
         private T _Max;
 #endif
+        protected SortedList() { }
+        public SortedList( IComparer< T > comparer, int capacity )
+		{
+            _Comparer = comparer;
+            _Array    = (capacity == 0) ? EMPTY_ARRAY : new T[ capacity ];
+            _Size     = 0;
+		}
+        public SortedList( IComparer< T > comparer, int capacity, T t )
+        {
+            _Comparer   = comparer;
+            _Array      = new T[ capacity ];
+            _Array[ 0 ] = t;
+            _Size       = 1;
+#if USE_MIN_MAX_VARIABLES
+            _Min = t;
+            _Max = t;
+#endif
+        }
 
         /*public SortedList< T > SplitInTwo()
         {
@@ -46,8 +52,7 @@ namespace System.Collections.Generic
 
             return (other);
         }*/
-        public void SplitInTwo< X >( X other )
-            where X : SortedList< T >
+        public void SplitInTwo< X >( X other ) where X : SortedList< T >
         {
             var half = (_Size >> 1);
 
@@ -67,7 +72,6 @@ namespace System.Collections.Generic
             //return (other);
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public int CompareWith4_SortedBlockList( T value )
         {
             var d = _Comparer.Compare( this.Min, value );
@@ -77,7 +81,6 @@ namespace System.Collections.Generic
             return (_Comparer.Compare( this.Max, value ));
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public int CompareWith4_SortedBlockSet( T value )
         {
             var d = _Comparer.Compare( this.Min, value );
@@ -88,7 +91,6 @@ namespace System.Collections.Generic
             return (0 <= d ? 0 : d); //if {value <= Max} => {0 <= d} => 0, else => d;
         }
 
-        [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
         public int CompareOtherWith4_BPlusTreeBlock( SortedList< T > other )
         {
             //must never been empty
@@ -113,11 +115,9 @@ namespace System.Collections.Generic
             #endregion
         }
 
-
         public int Capacity
 		{
-            [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-			get { return (_Array.Length); }
+			get => _Array.Length;
 			private set
 			{
                 if ( value != _Array.Length )
@@ -144,24 +144,12 @@ namespace System.Collections.Generic
 				}
 			}
 		}
-		public int Count
-		{
-			[TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-			get { return (_Size); }
-		}
-        public bool IsFull
-        {
-            get { return (_Array.Length == _Size); }
-        }
+        public int Count => _Size;
+        public bool IsFull => (_Array.Length == _Size); 
 
-        public T this[ int index ]
-		{
-            [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
-			get { return (_Array[ index ]); }
-		}
+        public T this[ int index ] => _Array[ index ];
         public T Min
         {
-            [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
             get
             {
 #if DEBUG
@@ -176,7 +164,6 @@ namespace System.Collections.Generic
         }
         public T Max
         {
-            [TargetedPatchingOptOut("Performance critical to inline this type of method across NGen image boundaries")]
             get
             {
 #if DEBUG
@@ -188,27 +175,6 @@ namespace System.Collections.Generic
                 return (_Array[ _Size - 1 ]);
 #endif
             }
-        }
-
-        protected SortedList()
-        {
-        }
-        public SortedList( IComparer< T > comparer, int capacity )
-		{
-            _Comparer = comparer;
-            _Array    = (capacity == 0) ? EMPTY_ARRAY : new T[ capacity ];
-            _Size     = 0;
-		}
-        public SortedList( IComparer< T > comparer, int capacity, T t )
-        {
-            _Comparer   = comparer;
-            _Array      = new T[ capacity ];
-            _Array[ 0 ] = t;
-            _Size       = 1;
-#if USE_MIN_MAX_VARIABLES
-            _Min = t;
-            _Max = t;
-#endif
         }
 	
         public void Add( T value )
@@ -251,10 +217,7 @@ namespace System.Collections.Generic
             _Max = default(T);
 #endif
         }
-        public bool Contains( T value )
-		{
-            return (0 <= IndexOfKey( value ));
-		}
+        public bool Contains( T value ) => (0 <= IndexOfKey( value ));
 
         public int IndexOfKey( T value )
 		{
@@ -265,11 +228,7 @@ namespace System.Collections.Generic
             }
 			return (index);
 		}
-        public int IndexOfKeyCore( T value )
-        {
-            int index = InternalBinarySearch( value );
-            return (index);
-        }
+        public int IndexOfKeyCore( T value ) => InternalBinarySearch( value );
         private void Insert( int index, T value )
         {
             if ( _Size == _Array.Length )
@@ -345,10 +304,7 @@ namespace System.Collections.Generic
                 Capacity = _Size;
             }
 		}
-        public void Trim()
-        {
-            Capacity = _Size;
-        }
+        public void Trim() => Capacity = _Size;
 
         private void EnsureCapacity( int min )
 		{
@@ -433,10 +389,18 @@ namespace System.Collections.Generic
                 yield return (_Array[ i ]);
             }
         }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (GetEnumerator());
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
+
+#if DEBUG
+        public override string ToString()
+        {
+            if ( _Size == 0 )
+            {
+                return ("EMPTY");
+            }
+            return ($"count: {_Size}, min: '{_Array[ 0 ]}', max: '{_Array[ _Size - 1 ]}'");
+        }
+#endif
     }
 }

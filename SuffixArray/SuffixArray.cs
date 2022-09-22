@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 
 namespace System.Collections.Generic
 {
@@ -24,10 +23,7 @@ namespace System.Collections.Generic
             public int    SuffixIndex;
             public int    WordIndex;
 #if DEBUG
-            public override string ToString()
-            {
-                return (Suffix + " - " + SuffixIndex + " (w: " + WordIndex + ")");
-            }
+            public override string ToString() => (Suffix + " - " + SuffixIndex + " (w: " + WordIndex + ")");
 #endif
         }
 
@@ -44,10 +40,7 @@ namespace System.Collections.Generic
                 }
             }
         }
-        private static void DestroyIsLetterOrDigitArray()
-        {
-            IS_LETTER_OR_DIGIT = null;
-        }
+        private static void DestroyIsLetterOrDigitArray() => IS_LETTER_OR_DIGIT = null;
 
         private static string ClearString_v1( string word, out int startIndex )
         {
@@ -99,10 +92,7 @@ namespace System.Collections.Generic
             return (null);
         }
 
-        private static int GetSuffixCount( string value )
-        {
-            return (value.Length);
-        }
+        private static int GetSuffixCount( string value ) => value.Length;
         private static IEnumerable< suffix_t > GetSuffixes_v1( int wordIndex, string word )
         {
             int index_base;
@@ -157,13 +147,9 @@ namespace System.Collections.Generic
 	        yield break;
         }*/
 
-        private static int suffixComparison( suffix_t x, suffix_t y )
-        {
-            return (string.CompareOrdinal( y.Suffix, x.Suffix ));
-        }
+        private static int suffixComparison( suffix_t x, suffix_t y ) => string.CompareOrdinal( y.Suffix, x.Suffix );
 
-        public static SuffixArray< T >.tuple_t[] Build( 
-            IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
+        public static SuffixArray< T >.tuple_t[] Build( IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
         {
             CreateIsLetterOrDigitArray();
 
@@ -234,10 +220,7 @@ namespace System.Collections.Generic
             public int SuffixIndex;
             public int ObjIndex;
 #if DEBUG
-            public override string ToString()
-            {
-                return (SuffixIndex + " (w: " + ObjIndex + ")");
-            }
+            public override string ToString() => (SuffixIndex + " (w: " + ObjIndex + ")");
 #endif
         }
 
@@ -249,18 +232,12 @@ namespace System.Collections.Generic
             public string Suffix;
             public SimplyLinkedList< data_t > Data;
 #if DEBUG
-            public override string ToString()
-            {
-                return (Suffix + " - " + Data.Count);
-            }
+            public override string ToString() => (Suffix + " - " + Data.Count);
 #endif
         }
 
 #if DEBUG
-        public override string ToString()
-        {
-            return (GetAllSuffixesCount( EnumerableModeEnum.BaseOfSuffix ).ToString());
-        }
+        public override string ToString() => GetAllSuffixesCount( EnumerableModeEnum.BaseOfSuffix ).ToString();
 #endif        
         private IList< T >              _Objects;
         private IStringValueGetter< T > _StringValueGetter;
@@ -269,18 +246,12 @@ namespace System.Collections.Generic
 		/// <summary>
         /// Initializes a new instance of the <see cref="T:System.Collections.Generic.sorted_list_key_char`2" /> class that is empty, has the default initial capacity, and uses the default <see cref="T:System.Collections.Generic.IComparer`1" />.
         /// </summary>
-        public SuffixArray( IList< T > objs, IStringValueGetter< T > stringValueGetter )
-            : this( objs, 0, objs.Count, stringValueGetter )
-        {
-        }
+        public SuffixArray( IList< T > objs, IStringValueGetter< T > stringValueGetter ) : this( objs, 0, objs.Count, stringValueGetter ) { }
         public SuffixArray( IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
         {
-            if ( objs == null ) 
-                throw (new ArgumentNullException("objs"));
-            if ( (length <= 0) || (length <= index) || (objs.Count < length) )
-                throw (new ArgumentException( "index-or-length" ));
-            if ( stringValueGetter == null )
-                throw (new ArgumentNullException("stringValueGetter"));
+            if ( objs == null )                                                throw (new ArgumentNullException("objs"));
+            if ( (length <= 0) || (length <= index) || (objs.Count < length) ) throw (new ArgumentException( "index-or-length" ));
+            if ( stringValueGetter == null )                                   throw (new ArgumentNullException("stringValueGetter"));
             //if ( values.Any( s => string.IsNullOrEmpty( s ) ) ) throw (new ArgumentNullException("values.Any()"));
 
             _Objects           = objs;
@@ -288,8 +259,7 @@ namespace System.Collections.Generic
             _Array             = SuffixArrayBuilder< T >.Build( objs, index, length, stringValueGetter );
         }
 
-        public override IEnumerable< find_result_t > 
-            Find( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override IEnumerable< find_result_t > Find( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -335,8 +305,7 @@ namespace System.Collections.Generic
             }
         }
 
-        public override int 
-            FindCount( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override int FindCount( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -380,8 +349,7 @@ namespace System.Collections.Generic
             return (findCount);
         }
 
-        public override find_result_t[] 
-            Find( string suffix, int maxCount, out int findTotalCount, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override find_result_t[] Find( string suffix, int maxCount, out int findTotalCount, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -446,8 +414,7 @@ namespace System.Collections.Generic
 		/// <param name="suffix">The key to locate in the <see cref="T:System.Collections.Generic.sorted_list_key_char`2" />.</param>
 		/// <exception cref="T:System.ArgumentNullException">
 		///   <paramref name="suffix" /> is null.</exception>
-        public override bool 
-            ContainsKey( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override bool ContainsKey( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
 		{
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -503,10 +470,7 @@ namespace System.Collections.Generic
                 }
             }
         }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (GetEnumerator());
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
 
         private int InternalBinarySearch( string suffix4Find )

@@ -1,16 +1,12 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     var getMaxCount = function () {
-        var maxCount = parseInt( trim_text( $('#maxCount').val().toString() ) );
+        var maxCount = parseInt( trim_text( $('#maxCount').val() ) );
         if ( isNaN( maxCount ) ) {
             maxCount = 25; $('#maxCount').val( maxCount );
         }
         return (maxCount);
     };
-    var getSuffix = function () {
-        var suffix = trim_text( $('#suffix').val().toString() );
-        return (suffix);
-    };
+    var getSuffix = function () { return trim_text($('#suffix').val()); };
     var suffixOnChange = function () {
         var len = $("#suffix").val().length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
         $("#inputTextLength").text("length: " + len + " chars ");
@@ -28,8 +24,7 @@ $(document).ready(function () {
     $("#suffix")
     // don't navigate away from the field on tab when selecting an item
     .bind("keydown", function (event) {
-        if (event.keyCode === $.ui.keyCode.TAB &&
-                $(this).data("autocomplete").menu.active) {
+        if (event.keyCode === $.ui.keyCode.TAB && $(this).data("autocomplete").menu.active) {
             event.preventDefault();
         }
     })
@@ -60,28 +55,27 @@ $(document).ready(function () {
         processing( suffix );
     });
 
-    if (!isGooglebot()) {
-        //force_load_model();
-        processing( getSuffix() );
-    }
+    if (!isGooglebot()) processing( getSuffix() ); 
 
     var last_processing_suffix = null;
     var last_processing_maxCount = null;
     function processing( suffix ) {
         var maxCount = getMaxCount();
-        if (last_processing_suffix == suffix && last_processing_maxCount == maxCount)
+        if (last_processing_suffix === suffix && last_processing_maxCount === maxCount)
             return;
         var timer = setTimeout( processing_start, 250 );
         //processing_start();
         var startDatetime = new Date();
-
+        var model = {
+            suffix  : suffix,
+            maxCount: maxCount
+        };
         $.ajax({
-            type: "POST",
-            url:  "ProcessHandler.ashx",
-            data: {
-                suffix  : suffix,
-                maxCount: maxCount
-            },
+            type       : "POST",
+            contentType: "application/json",
+            dataType   : "json",
+            url        : "/Rest/Run",
+            data       : JSON.stringify( model ),
             success: function (tuples) {
                 var endDatetime = new Date();
                 var elapsedMilliseconds = endDatetime - startDatetime;
@@ -110,41 +104,37 @@ $(document).ready(function () {
     function tableView( $processResult, tuples, elapsedMilliseconds ) {
         $processResult.removeClass('error').text('');
         processing_end();
-        if (tuples.values && tuples.values.length != 0) {
-            var _html = 'delivered: <span class="border value">' + tuples.values.length + '</span>';
-            if (tuples.findTotalCount != tuples.values.length)
-                _html += ', found: <span class="border value">' + tuples.findTotalCount + '</span>';
-            _html += ', suffix: <span class="border value">' + tuples.suffix + '</span>';
-            _html += ', (search elapsed: <span class="border value">' + elapsedMilliseconds + '</span> ms)';
-            $("#processHeader").html(_html);
+        if (tuples.values && tuples.values.length) {
+            var html = 'delivered: <span class="border value">' + tuples.values.length + '</span>';
+            if (tuples.findTotalCount !== tuples.values.length)
+                html += ', found: <span class="border value">' + tuples.findTotalCount + '</span>';
+            html += ', suffix: <span class="border value">' + tuples.suffix + '</span>';
+            html += ', (search elapsed: <span class="border value">' + elapsedMilliseconds + '</span> ms)';
+            $("#processHeader").html(html);
 
             var $table = $('<table />');
             $('<tr> <th>#</th> <th>Id</th> <th>Diagnosis</th> </tr>').appendTo($table);
+            var trs = [], $d = $('<div>');
             for (var i = 0, len = tuples.values.length; i < len; i++) {
-                var value = tuples.values[i];
-                _html = '<tr class="suggest"><td>' + (i + 1) + '. </td><td class="id">' +
-                        value.id + '</td><td>' +
-                        ((value.suffixIdx != 0) ? ('<span class="suggest-query">' + value.name.substr(0, value.suffixIdx) + '</span>') : '') +
-                        '<span class="suggest-bold">' + value.name.substr(value.suffixIdx, tuples.suffix.length) + '</span>' +
-                        '<span class="suggest-query">' + value.name.substr(value.suffixIdx + tuples.suffix.length) + '</span></td>' +
-                        /*
-                        '<td>' + value.type.toLowerCase() + '</td>' +
-                        '<td class="suggest-city-name">' + value.city.name + '</td>' +
-                        '<td>(' + value.city.type.toLowerCase() + ')</td>' +
-                        */
-                        '</tr>';
-                $( _html ).appendTo( $table );
+                var x = tuples.values[i];
+                var tr = $('<tr class="suggest"><td>' + (i + 1) + '. </td><td class="id">' + x.id + '</td><td>' +
+                    (x.suffixIdx ? ('<span class="suggest-query">' + $d.text( x.name.substr(0, x.suffixIdx) ).html() + '</span>') : '') +
+                        '<span class="suggest-bold">' + $d.text( x.name.substr(x.suffixIdx, tuples.suffix.length) ).html() + '</span>' +
+                        '<span class="suggest-query">' + $d.text( x.name.substr(x.suffixIdx + tuples.suffix.length) ).html() + '</span></td>' +
+                        '</tr>');
+                trs.push( tr );
             }
+            $table.append( trs );
             $table.appendTo( $processResult );
 
-            if (tuples.findTotalCount != tuples.values.length)
-                _html = '<i>...more ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
+            if (tuples.findTotalCount !== tuples.values.length)
+                html = '<i>...more ' + (tuples.findTotalCount - tuples.values.length) + '...</i>';
             else
-                _html = '';
-            $("#processFooter").html(_html);
+                html = '';
+            $("#processFooter").html(html);
         } else {
-            _html = '<div class="no-suggest">diagnoses with the suffix <span class="suggest-bold">\'' + tuples.suffix + '\'</span> not found in Reference.DiagnosisCodes</div>';
-            $processResult.html( _html );
+            html = '<div class="no-suggest">diagnoses with the suffix <span class="suggest-bold">\'' + $d.text(tuples.suffix).html() + '\'</span> not found in Reference.DiagnosisCodes</div>';
+            $processResult.html( html );
         }        
     };
 
@@ -157,7 +147,7 @@ $(document).ready(function () {
         $('#suffix,#maxCount').addClass('no-change').attr('readonly', 'readonly').attr('disabled', 'disabled');
         $('#processResult').removeClass('error').html('');
         $('#processButton').addClass('disabled');
-        $("#processHeader").html('<div class="processing-suggest"><img src="/rc/images/roller.gif" /> Processing...</div>');
+        $("#processHeader").html('<div class="processing-suggest"><img src="/images/roller.gif" /> Processing...</div>');
         $("#processFooter").html('');
     };
     function processing_end() {
@@ -171,48 +161,7 @@ $(document).ready(function () {
             _$focused = null;
         }
     };
-    function trim_text(text) {
-        return (text.replace(/(^\s+)|(\s+$)/g, ""));
-    };
-    function is_text_empty(text) {
-        return (text.replace(/(^\s+)|(\s+$)/g, "") == "");
-    };
-    function split(val) {        
-        return val.split(/ \s*/); //---return val.split(/,\s*/);
-    };
-    function extractLast(term) {
-        return split(term).pop();
-    };
-    function force_load_model() {
-        $.ajax({
-            type: "POST",
-            url: "ProcessHandler.ashx",
-            data: { suffix: "_dummy_" }
-        });
-    };
-    function isGooglebot() {
-        return (navigator.userAgent.toLowerCase().indexOf('googlebot/') != -1);
-    };
-
-    String.prototype.insert = function (index, str) {
-        if (0 < index)
-            return (this.substring( 0, index ) + str + this.substring( index, this.length ));
-        return (str + this);
-    };
-    String.prototype.replaceAll = function (token, newToken, ignoreCase) {
-        var _token;
-        var str = this + "";
-        var i   = -1;
-        if (typeof token === "string") {
-            if (ignoreCase) {
-                _token = token.toLowerCase();
-                while (( i = str.toLowerCase().indexOf( token, i >= 0 ? i + newToken.length : 0 )) !== -1) {
-                    str = str.substring(0, i) + newToken + str.substring(i + token.length);
-                }
-            } else {
-                return this.split(token).join(newToken);
-            }
-        }
-        return (str);
-    };
+    function trim_text(text) { return text.replace(/(^\s+)|(\s+$)/g, ""); };
+    function is_text_empty(text) { return !trim_text(text); };
+    function isGooglebot() { return (navigator.userAgent.toLowerCase().indexOf('googlebot/') !== -1); };
 });

@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace System.Collections.Generic
 {
@@ -22,8 +18,8 @@ namespace System.Collections.Generic
         private const int DEFAULT_CAPACITY = 4;
         private const int MAX_CORECLR_ARRAYLENGTH = 0x7fefffff; // For byte arrays the limit is slightly larger
 
-        private T[] _array; // Starts out null, initialized on first Add.
-        private int _count; // Number of items into _array we're using.
+        private T[] _Array; // Starts out null, initialized on first Add.
+        private int _Count; // Number of items into _array we're using.
 
         /// <summary>
         /// Initializes the <see cref="ArrayBuilder{T}"/> with a specified capacity.
@@ -34,7 +30,7 @@ namespace System.Collections.Generic
             Debug.Assert( capacity >= 0 );
             if ( capacity > 0 )
             {
-                _array = new T[ capacity ];
+                _Array = new T[ capacity ];
             }
         }
 
@@ -42,18 +38,12 @@ namespace System.Collections.Generic
         /// Gets the number of items this instance can store without re-allocating,
         /// or 0 if the backing array is <c>null</c>.
         /// </summary>
-        public int Capacity
-        {
-            get { return (_array != null ? _array.Length : 0); }
-        }
+        public int Capacity => ((_Array != null) ? _Array.Length : 0);
 
         /// <summary>
         /// Gets the number of items in the array currently in use.
         /// </summary>
-        public int Count
-        {
-            get { return (_count); }
-        }
+        public int Count => _Count;
 
         /// <summary>
         /// Gets or sets the item at a certain index in the array.
@@ -63,13 +53,13 @@ namespace System.Collections.Generic
         {
             get
             {
-                Debug.Assert( index >= 0 && index < _count );
-                return _array[ index ];
+                Debug.Assert( index >= 0 && index < _Count );
+                return _Array[ index ];
             }
             set
             {
-                Debug.Assert( index >= 0 && index < _count );
-                _array[ index ] = value;
+                Debug.Assert( index >= 0 && index < _Count );
+                _Array[ index ] = value;
             }
         }
 
@@ -79,9 +69,9 @@ namespace System.Collections.Generic
         /// <param name="item">The item to add.</param>
         public void Add( T item )
         {
-            if ( _count == Capacity )
+            if ( _Count == Capacity )
             {
-                EnsureCapacity( _count + 1 );
+                EnsureCapacity( _Count + 1 );
             }
 
             UncheckedAdd( item );
@@ -95,26 +85,26 @@ namespace System.Collections.Generic
         /// </remarks>
         public T[] ToArray()
         {
-            if ( _count == 0 )
+            if ( _Count == 0 )
             {
                 return EmptyArray< T >.Value;
             }
 
-            Debug.Assert( _array != null ); // Nonzero _count should imply this
+            Debug.Assert( _Array != null ); // Nonzero _count should imply this
 
-            T[] result = _array;
-            if ( _count < result.Length )
+            T[] result = _Array;
+            if ( _Count < result.Length )
             {
                 // Avoid a bit of overhead (method call, some branches, extra codegen)
                 // which would be incurred by using Array.Resize
-                result = new T[ _count ];
-                Array.Copy( _array, 0, result, 0, _count );
+                result = new T[ _Count ];
+                Array.Copy( _Array, 0, result, 0, _Count );
             }
 
 #if DEBUG
             // Try to prevent callers from using the ArrayBuilder after ToArray, if _count != 0.
-            _count = -1;
-            _array = null;
+            _Count = -1;
+            _Array = null;
 #endif
 
             return result;
@@ -130,16 +120,16 @@ namespace System.Collections.Generic
         /// </remarks>
         public void UncheckedAdd( T item )
         {
-            Debug.Assert( _count < Capacity );
+            Debug.Assert( _Count < Capacity );
 
-            _array[ _count++ ] = item;
+            _Array[ _Count++ ] = item;
         }
 
         private void EnsureCapacity( int minimum )
         {
             Debug.Assert( minimum > Capacity );
 
-            int capacity = Capacity;
+            int capacity     = Capacity;
             int nextCapacity = (capacity == 0) ? DEFAULT_CAPACITY : 2 * capacity;
 
             if ( (uint) nextCapacity > (uint) MAX_CORECLR_ARRAYLENGTH )
@@ -149,12 +139,12 @@ namespace System.Collections.Generic
 
             nextCapacity = Math.Max( nextCapacity, minimum );
 
-            T[] next = new T[ nextCapacity ];
-            if ( _count > 0 )
+            var next = new T[ nextCapacity ];
+            if ( _Count > 0 )
             {
-                Array.Copy( _array, 0, next, 0, _count );
+                Array.Copy( _Array, 0, next, 0, _Count );
             }
-            _array = next;
+            _Array = next;
         }
     }
 }

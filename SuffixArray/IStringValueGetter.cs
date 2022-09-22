@@ -6,6 +6,6 @@ namespace System.Collections.Generic
     /// </summary>
     public interface IStringValueGetter< T >
     {
-        string GetStringValue( T obj );
+        string GetStringValue( in T obj );
     }
 }

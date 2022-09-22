@@ -22,14 +22,17 @@ namespace Reference.DiagnosisCodes.ConsoleApp
     /// </summary>
     internal static class Program
     {
+        /// <summary>
+        /// 
+        /// </summary>
         private sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
         {
-            public string GetStringValue( tuple t )
-            {
-                return (t.Text);
-            }                
+            public string GetStringValue( in tuple t ) => t.Text;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
         private struct tuple
         {
             public int    Id   { get; private set; }
@@ -55,14 +58,21 @@ namespace Reference.DiagnosisCodes.ConsoleApp
 
         private static void Main( string[] args )
         {
-            var sa = CreateSuffixArray();
+            try
+            {
+                var sa = CreateSuffixArray();
 
-            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
-            GC.WaitForPendingFinalizers();
-            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+                GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+                GC.WaitForPendingFinalizers();
+                GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
 
-            SuffixArray__test( sa ); //--- SuffixArray__test_Threads( sa ); //--- 
-
+                SuffixArray__test( sa ); //--- SuffixArray__test_Threads( sa ); //--- 
+            }
+            catch ( Exception ex )
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine( ex );
+            }
             Console.ForegroundColor = ConsoleColor.DarkGray;
             Console.WriteLine( Environment.NewLine + "[.....finita.....]" );
             Console.ReadLine();

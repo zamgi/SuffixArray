@@ -1,14 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace Reference.DiagnosisCodes.web.demo
+namespace Reference.DiagnosisCodes.WebService
 {
     /// <summary>
     /// 
     /// </summary>
     internal sealed class tupleStringValueGetter : IStringValueGetter< tuple >
     {
-        public string GetStringValue( tuple t ) => t.Text;
+        public string GetStringValue( in tuple t ) => t.Text;
     }
 
     /// <summary>

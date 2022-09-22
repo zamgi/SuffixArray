@@ -1,81 +1,43 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
-using System.Web;
 
-namespace Reference.DiagnosisCodes.web.demo
+using find_result_t = System.Collections.Generic.SuffixArray< Reference.DiagnosisCodes.WebService.tuple >.find_result_t;
+
+namespace Reference.DiagnosisCodes.WebService
 {
     /// <summary>
     /// 
     /// </summary>
-    internal static class Config
+    public sealed class SuffixArrayProcessor
     {
-        public static readonly string INPUT_CSV_FILE = ConfigurationManager.AppSettings[ "INPUT_CSV_FILE" ];
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    internal static class SuffixArrayDataHttpContext
-    {
-        private static readonly object _Lock = new object();
-        private static SuffixArray< tuple > _SuffixArray;
-        private static IList< tuple > _TupleData;
-
-        public static SuffixArrayJsonResultParams Find( string suffix, int maxCount )
+        /// <summary>
+        /// 
+        /// </summary>
+        internal readonly struct Result
         {
-            #region [.load tuple-data.]
-            var tuples = _TupleData;
-            if ( tuples == null )
-            {
-                lock ( _Lock )
-                {
-                    tuples = _TupleData;
-                    if ( tuples == null )
-                    {
-                        {
-                            tuples = CreateTupleData();
-                            _TupleData = tuples;
-                        }
-                        {
-                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
-                            GC.WaitForPendingFinalizers();
-                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
-                        }
-                    }
-                }
-            }
-            #endregion
+            public string          suffix         { get; init; }
+            public int             maxCount       { get; init; }
+            public int             findTotalCount { get; init; }
+            public find_result_t[] frs            { get; init; }
+            public IList< tuple >  tuples         { get; init; }
+        }
 
-            #region [.load suffix-array by tuple-data.]
-            var sa = _SuffixArray;
-            if ( sa == null )
-            {
-                lock ( _Lock )
-                {
-                    sa = _SuffixArray;
-                    if ( sa == null )
-                    {
-                        {
-                            sa = new SuffixArray< tuple >( tuples, new tupleStringValueGetter() );
-                            _SuffixArray = sa;
-                        }
-                        {
-                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
-                            GC.WaitForPendingFinalizers();
-                            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
-                        }
-                    }
-                }
-            }
-            #endregion
+        private SuffixArray< tuple > _SuffixArray;
+        private IList< tuple > _Tuples;
 
+        internal SuffixArrayProcessor( IList< tuple > tuples, SuffixArray< tuple > suffixArray )
+        {
+            _Tuples      = tuples;
+            _SuffixArray = suffixArray;
+        }
+        internal Result Find( string suffix, int maxCount )
+        {
             #region [.find suffix in tuple-data.]
-            var frs = sa.Find( suffix, maxCount, out var findTotalCount );
+            var frs = _SuffixArray.Find( suffix, maxCount, out var findTotalCount );
             #endregion
 
-            #region commented
+            #region comm.
             /*
             #region [.sort result by CityType & StreetType.]
             Array.Sort< find_result_t >( frs, (fr1, fr2) =>
@@ -152,23 +114,22 @@ namespace Reference.DiagnosisCodes.web.demo
             #endregion
 
             #region [.result.]
-            var p = new SuffixArrayJsonResultParams()
+            var p = new Result()
             {
                 suffix         = suffix,
                 maxCount       = maxCount,
                 findTotalCount = findTotalCount,
                 frs            = frs,
-                tuples         = tuples,
+                tuples         = _Tuples,
             };
             return (p);
             #endregion
         }
 
-        private static IList< tuple > CreateTupleData()
+        private static IList< tuple > CreateTupleData( string INPUT_CSV_FILE )
         {
-            var appRootPath = HttpContext.Current.Server.MapPath( "~/" );
             var tuples = new List< tuple >( 110000 );
-            using ( var sr = new StreamReader( Path.Combine( appRootPath, Config.INPUT_CSV_FILE ) ) )
+            using ( var sr = new StreamReader( INPUT_CSV_FILE ) )
             {
                 for ( var line = sr.ReadLine(); line != null; line = sr.ReadLine() )
                 {
@@ -177,6 +138,17 @@ namespace Reference.DiagnosisCodes.web.demo
             }
             tuples.Capacity = tuples.Count;
             return (tuples);
+        }
+        public static SuffixArrayProcessor Create( string INPUT_CSV_FILE )
+        {
+            var tuples      = CreateTupleData( INPUT_CSV_FILE );
+            var suffixArray = new SuffixArray< tuple >( tuples, new tupleStringValueGetter() );
+
+            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+            GC.WaitForPendingFinalizers();
+            GC.Collect( GC.MaxGeneration, GCCollectionMode.Forced );
+
+            return (new SuffixArrayProcessor( tuples, suffixArray ));
         }
     }
 }

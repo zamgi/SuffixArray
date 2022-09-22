@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace System.Collections.Generic
@@ -23,10 +22,7 @@ namespace System.Collections.Generic
             public int SuffixIndex;
             public int ObjIndex;
 #if DEBUG
-            public override string ToString()
-            {
-                return (SuffixIndex + " (w: " + ObjIndex + ")");
-            }
+            public override string ToString() => (SuffixIndex + " (w: " + ObjIndex + ")");
 #endif
         }
 
@@ -38,10 +34,7 @@ namespace System.Collections.Generic
             public string Suffix;
             public SimplyLinkedList< data_t > Data;
 #if DEBUG
-            public override string ToString()
-            {
-                return (Suffix + " - " + Data.Count);
-            }
+            public override string ToString() => (Suffix + " - " + Data.Count);
 #endif
             public int CompareTo( tuple_t other )
             {
@@ -54,10 +47,7 @@ namespace System.Collections.Generic
                 return (other.Suffix.CompareTo( this.Suffix )); //---return (this.Suffix.CompareTo( other.Suffix ));
             }
 
-            public int Compare( tuple_t x, tuple_t y )
-            {
-                return (string.CompareOrdinal( x.Suffix, y.Suffix ));
-            }
+            public int Compare( tuple_t x, tuple_t y ) => string.CompareOrdinal( x.Suffix, y.Suffix );
         }
 
         /// <summary>
@@ -100,29 +90,17 @@ namespace System.Collections.Generic
                 public int    SuffixIndex;
                 public int    WordIndex;
 #if DEBUG
-                public override string ToString()
-                {
-                    return (Suffix + " - " + SuffixIndex + " (w: " + WordIndex + ")");
-                }
+                public override string ToString() => (Suffix + " - " + SuffixIndex + " (w: " + WordIndex + ")");
 #endif
-                /*public override int GetHashCode()
-                {
-                    return (SuffixIndex.GetHashCode() ^ WordIndex.GetHashCode());
-                }*/
+                /*public override int GetHashCode() => (SuffixIndex.GetHashCode() ^ WordIndex.GetHashCode());*/
             }
             /// <summary>
             /// 
             /// </summary>
             private sealed class suffix_t_IEqualityComparer : IEqualityComparer< suffix_t >
             {
-                public bool Equals( suffix_t x, suffix_t y )
-                {
-                    return (/*x.WordIndex == y.WordIndex &&*/ x.SuffixIndex == y.SuffixIndex);
-                }
-                public int GetHashCode( suffix_t obj )
-                {
-                    return (obj.SuffixIndex.GetHashCode());
-                }
+                public bool Equals( suffix_t x, suffix_t y ) => (/*x.WordIndex == y.WordIndex &&*/ x.SuffixIndex == y.SuffixIndex);
+                public int GetHashCode( suffix_t obj ) => obj.SuffixIndex.GetHashCode();
             }
 
             private static bool[] IS_LETTER_OR_DIGIT_MAP;
@@ -193,10 +171,7 @@ namespace System.Collections.Generic
                 }
             }
 
-            private static int GetSuffixCount( string value )
-            {
-                return (value.Length);
-            }
+            private static int GetSuffixCount( string value ) => value.Length;
             private static IEnumerable< suffix_t > GetSuffixes( int wordIndex, string word )
             {
                 int startIndex = 0;
@@ -217,8 +192,7 @@ namespace System.Collections.Generic
                 }
             }
 
-            public static BPlusTreeList< tuple_t > Build( 
-                IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
+            public static BPlusTreeList< tuple_t > Build( IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
             {
                 CreateMapArrays();
 
@@ -320,10 +294,7 @@ namespace System.Collections.Generic
         }
 
 #if DEBUG
-        public override string ToString()
-        {
-            return (GetAllSuffixesCount( EnumerableModeEnum.BaseOfSuffix ).ToString());
-        }
+        public override string ToString() => GetAllSuffixesCount( EnumerableModeEnum.BaseOfSuffix ).ToString();
 #endif        
         private IList< T >               _Objects;
         private IStringValueGetter< T >  _StringValueGetter;
@@ -332,18 +303,12 @@ namespace System.Collections.Generic
 		/// <summary>
         /// Initializes a new instance of the <see cref="T:System.Collections.Generic.sorted_list_key_char`2" /> class that is empty, has the default initial capacity, and uses the default <see cref="T:System.Collections.Generic.IComparer`1" />.
         /// </summary>
-        public SuffixArray_v2( IList< T > objs, IStringValueGetter< T > stringValueGetter )
-            : this( objs, 0, objs.Count, stringValueGetter )
-        {
-        }
+        public SuffixArray_v2( IList< T > objs, IStringValueGetter< T > stringValueGetter ) : this( objs, 0, objs.Count, stringValueGetter ) { }
         public SuffixArray_v2( IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
         {
-            if ( objs == null ) 
-                throw (new ArgumentNullException( nameof(objs) ));
-            if ( (length <= 0) || (length <= index) || (objs.Count < length) )
-                throw (new ArgumentException( "index-or-length" ));
-            if ( stringValueGetter == null )
-                throw (new ArgumentNullException( nameof(stringValueGetter) ));
+            if ( objs == null )                                                throw (new ArgumentNullException( nameof(objs) ));
+            if ( (length <= 0) || (length <= index) || (objs.Count < length) ) throw (new ArgumentException( "index-or-length" ));
+            if ( stringValueGetter == null )                                   throw (new ArgumentNullException( nameof(stringValueGetter) ));
             //if ( values.Any( s => string.IsNullOrEmpty( s ) ) ) throw (new ArgumentNullException("values.Any()"));
 
             _Objects           = objs;
@@ -351,8 +316,7 @@ namespace System.Collections.Generic
             _BPT               = SuffixArrayBuilder.Build( objs, index, length, stringValueGetter );
         }
 
-        public override IEnumerable< find_result_t > 
-            Find( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override IEnumerable< find_result_t > Find( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -373,8 +337,7 @@ namespace System.Collections.Generic
             }         
         }
 
-        public override int 
-            FindCount( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override int FindCount( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -399,8 +362,7 @@ namespace System.Collections.Generic
             return (findCount);
         }
 
-        public override find_result_t[] 
-            Find( string suffix, int maxCount, out int findTotalCount, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override find_result_t[] Find( string suffix, int maxCount, out int findTotalCount, FindModeEnum findMode = FindModeEnum.IgnoreCase )
         {
             findTotalCount = 0;
 
@@ -408,7 +370,6 @@ namespace System.Collections.Generic
 
             var tuple = new tuple_t() { Suffix = suffix };
             var bpt_tuples = _BPT.GetValues( tuple, StartsWithStringComparer.Inst );
-
 
             var frs = new LinkedList< find_result_t >();
 
@@ -436,8 +397,7 @@ namespace System.Collections.Generic
 		/// <param name="suffix">The key to locate in the <see cref="T:System.Collections.Generic.sorted_list_key_char`2" />.</param>
 		/// <exception cref="T:System.ArgumentNullException">
 		///   <paramref name="suffix" /> is null.</exception>
-        public override bool 
-            ContainsKey( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
+        public override bool ContainsKey( string suffix, FindModeEnum findMode = FindModeEnum.IgnoreCase )
 		{
             suffix = CorrectFindSuffix( suffix, findMode );
 
@@ -502,10 +462,7 @@ namespace System.Collections.Generic
             //    }
             //}
         }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (GetEnumerator());
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         #endregion
 
         private static string CorrectFindSuffix( string suffix, FindModeEnum findMode )

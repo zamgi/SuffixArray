@@ -1,66 +1,23 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{30F15951-F63D-4648-80E2-730037C64429}</ProjectGuid>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <TargetLatestRuntimePatch>true</TargetLatestRuntimePatch>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>System.Collections.Generic</RootNamespace>
-    <AssemblyName>BPlusTree</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion> <LangVersion>latest</LangVersion>
-    <FileAlignment>512</FileAlignment>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ProduceReferenceAssembly>False</ProduceReferenceAssembly>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
+
+  <PropertyGroup>
     <OutputPath>bin\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <UseVSHostingProcess>false</UseVSHostingProcess>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
+    <None Remove=".gitignore" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="BPlusTreeList\BPlusTreeList[T].cs" />
-    <Compile Include="BPlusTreeSet\BPlusTreeSet[T].cs" />
-    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\ArrayBuilder[T].cs" />
-    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\BitHelper.cs" />
-    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\EnumerableHelpers.cs" />
-    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\ICollectionDebugView[T].cs" />
-    <Compile Include="BPlusTreeSet\SortedSetEx\Internals\LargeArrayBuilder[T].cs" />
-    <Compile Include="BPlusTreeSet\SortedSetEx\SortedSetEx[T].cs" />
-    <Compile Include="Common\BPlusTreeBlock[T].cs" />
-    <None Include="Common\%28BPlusTreeBlock[T].cs%29" />
-    <Compile Include="Common\SortedList[T].cs" />
-    <Compile Include="IBPlusTree[T].cs" />
-    <Compile Include="IBPlusTreeComparer[T].cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="Common\%28SortedList[T].cs%29" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

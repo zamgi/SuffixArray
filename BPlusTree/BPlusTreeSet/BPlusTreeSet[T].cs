@@ -8,13 +8,11 @@ namespace System.Collections.Generic
     /// </summary>
     internal sealed class SortedBlockSet< T > : SortedSetEx< BPlusTreeBlock< T > >
     {
-        public SortedBlockSet() : base( BPlusTreeBlock< T >.BlockComparer.Inst )
-        {
-        }
+        public SortedBlockSet() : base( BPlusTreeBlock< T >.BlockComparer.Inst ) { }
 
         public BPlusTreeBlock< T > FindNearestBlock( T value )
         {
-            Node currNode = base._root;
+            Node currNode = base._Root;
             if ( currNode == null )
             {
                 return (null);
@@ -57,12 +55,10 @@ namespace System.Collections.Generic
         private const int DEFAULT_BLOCK_CAPACITY = 0x100;
 
         private SortedBlockSet< T > _SortedBlockSet;
-        private int _BlockCapacity;
-        private IComparer< T > _Comparer;
+        private int                 _BlockCapacity;
+        private IComparer< T >      _Comparer;
 
-        public BPlusTreeSet( IComparer< T > comparer ) : this( comparer, DEFAULT_BLOCK_CAPACITY )
-        {
-        }
+        public BPlusTreeSet( IComparer< T > comparer ) : this( comparer, DEFAULT_BLOCK_CAPACITY ) { }
         public BPlusTreeSet( IComparer< T > comparer, int blockCapacity )
         {
             _Comparer       = comparer;
@@ -424,14 +420,8 @@ namespace System.Collections.Generic
             #endregion
         }
 
-        public int GetCount()
-        {
-            return (_SortedBlockSet.Sum( block => block.Count ));
-        }
-        public int Count
-        {
-            get { return (GetCount()); }
-        }
+        public int GetCount() => _SortedBlockSet.Sum( block => block.Count );
+        public int Count => GetCount();
 
         public void Trim()
         {
@@ -451,15 +441,9 @@ namespace System.Collections.Generic
                 }
             }
         }
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return (GetEnumerator());
-        }
+        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 #if DEBUG
-        public override string ToString()
-        {
-            return (_SortedBlockSet.ToString());
-        }
+        public override string ToString() => _SortedBlockSet.ToString();
 #endif
     }
 }

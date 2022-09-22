@@ -4,12 +4,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SuffixArray")]
+[assembly: AssemblyTitle("Reference.DiagnosisCodes.WebService")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("zamgi")]
-[assembly: AssemblyProduct("SuffixArray")]
-[assembly: AssemblyCopyright("Copyright © zamgi 2014")]
+[assembly: AssemblyCompany("xz")]
+[assembly: AssemblyProduct("Reference.DiagnosisCodes.WebService")]
+[assembly: AssemblyCopyright("Copyright © zamgi 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +19,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("ae39c37f-7144-4b5e-9c74-fa570d928b41")]
+[assembly: Guid("0e56a1b4-2315-47c8-a5f8-217503e67e31")]
 
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

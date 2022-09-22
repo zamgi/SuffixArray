@@ -1,8 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-// See the LICENSE file in the project root for more information.
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace System.Collections.Generic
 {
@@ -18,8 +14,7 @@ namespace System.Collections.Generic
         {
             Debug.Assert( source != null );
 
-            var collection = source as ICollection< T >;
-            if ( collection != null )
+            if ( source is ICollection< T > collection )
             {
                 int count = collection.Count;
                 if ( count == 0 )
@@ -27,14 +22,14 @@ namespace System.Collections.Generic
                     return EmptyArray< T >.Value;
                 }
 
-                var result = new T[ count ];
-                collection.CopyTo( result, arrayIndex: 0 );
-                return result;
+                var array = new T[ count ];
+                collection.CopyTo( array, arrayIndex: 0 );
+                return array;
             }
 
             var builder = new LargeArrayBuilder< T >( initialize: true );
             builder.AddRange( source );
-            return builder.ToArray();
+            return (builder.ToArray());
         }
 
         /// <summary>Converts an enumerable to an array using the same logic as List{T}.</summary>
@@ -46,10 +41,9 @@ namespace System.Collections.Generic
         /// </returns>
         internal static T[] ToArray< T >( IEnumerable< T > source, out int length )
         {
-            ICollection< T > ic = source as ICollection< T >;
-            if ( ic != null )
+            if ( source is ICollection< T > collection )
             {
-                int count = ic.Count;
+                int count = collection.Count;
                 if ( count != 0 )
                 {
                     // Allocate an array of the desired size, then copy the elements into it. Note that this has the same
@@ -58,10 +52,10 @@ namespace System.Collections.Generic
                     // exception from overrunning the array (if the size went up) or we could end up not filling as many
                     // items as 'count' suggests (if the size went down).  This is only an issue for concurrent collections
                     // that implement ICollection< T >, which as of .NET 4.6 is just ConcurrentDictionary<TKey, TValue>.
-                    T[] arr = new T[ count ];
-                    ic.CopyTo( arr, 0 );
+                    var array = new T[ count ];
+                    collection.CopyTo( array, 0 );
                     length = count;
-                    return arr;
+                    return (array);
                 }
             }
             else
@@ -71,13 +65,13 @@ namespace System.Collections.Generic
                     if ( en.MoveNext() )
                     {
                         const int DEFAULT_CAPACITY = 4;
-                        T[] arr = new T[ DEFAULT_CAPACITY ];
-                        arr[ 0 ] = en.Current;
+                        var array = new T[ DEFAULT_CAPACITY ];
+                        array[ 0 ] = en.Current;
                         int count = 1;
 
                         while ( en.MoveNext() )
                         {
-                            if ( count == arr.Length )
+                            if ( count == array.Length )
                             {
                                 // MaxArrayLength is defined in Array.MaxArrayLength and in gchelpers in CoreCLR.
                                 // It represents the maximum number of elements that can be in an array where
@@ -102,20 +96,20 @@ namespace System.Collections.Generic
                                     newLength = MaxArrayLength <= count ? count + 1 : MaxArrayLength;
                                 }
 
-                                Array.Resize( ref arr, newLength );
+                                Array.Resize( ref array, newLength );
                             }
 
-                            arr[ count++ ] = en.Current;
+                            array[ count++ ] = en.Current;
                         }
 
                         length = count;
-                        return arr;
+                        return (array);
                     }
                 }
             }
 
             length = 0;
-            return EmptyArray< T >.Value;
+            return (EmptyArray< T >.Value);
         }
     }
 }
