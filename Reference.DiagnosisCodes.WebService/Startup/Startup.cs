@@ -46,17 +46,8 @@ namespace Reference.DiagnosisCodes.WebService
                 }
             });
 
-            //For application running on IIS:
-            services.Configure< IISServerOptions >( options =>
-            {
-                options.MaxRequestBodySize = int.MaxValue;
-            });
-            //For application running on Kestrel:
-            services.Configure< KestrelServerOptions >( options =>
-            {
-                options.Limits.MaxRequestBodySize = int.MaxValue; // if don't set default value is: 30 MB
-            });
-            //Form's MultipartBodyLengthLimit
+            services.Configure< IISServerOptions >( options => options.MaxRequestBodySize = int.MaxValue );
+            services.Configure< KestrelServerOptions >( options => options.Limits.MaxRequestBodySize = int.MaxValue );
             services.Configure< FormOptions >( x =>
             {
                 x.ValueLengthLimit            = int.MaxValue;
@@ -82,8 +73,19 @@ namespace Reference.DiagnosisCodes.WebService
             //---app.UseCors( configurePolicy => configurePolicy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials() );
 
             app.UseEndpoints( endpoints => endpoints.MapControllers() );
-            //-------------------------------------------------------------//
+
+            const string INDEX_PAGE_PATH = "/index.html";
+            app.Use( async (ctx, next) =>
+            {
+                await next( ctx );
+                
+                if ( (ctx.Response.StatusCode == 404) && (ctx.Request.Path == INDEX_PAGE_PATH) )
+                {
+                    ctx.Response.Redirect( INDEX_PAGE_PATH );
+                }
+            });
 #if DEBUG
+            //-------------------------------------------------------------//
             OpenBrowserIfRunAsConsole( app );
 #endif            
         }

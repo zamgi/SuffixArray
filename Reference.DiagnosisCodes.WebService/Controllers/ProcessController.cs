@@ -22,7 +22,7 @@ namespace Reference.DiagnosisCodes.WebService.Controllers
             _Logger               = logger;
         }
 #else
-        public RestController( SuffixArrayProcessor suffixArrayProcessor ) => _SuffixArrayProcessor = suffixArrayProcessor;
+        public ProcessController( SuffixArrayProcessor suffixArrayProcessor ) => _SuffixArrayProcessor = suffixArrayProcessor;
 #endif
         #endregion
 
@@ -45,8 +45,7 @@ namespace Reference.DiagnosisCodes.WebService.Controllers
 #if DEBUG
                 _Logger.LogError( $"Error while process: '{m.Suffix}' => {ex}" );
 #endif
-                return Ok( new ResultVM( m, ex ) );
-                //---return StatusCode( 500, new SuffixArrayJsonResult( m, ex ) ); //Internal Server Error
+                return Ok( new ResultVM( m, ex ) ); //---return StatusCode( 500, new SuffixArrayJsonResult( m, ex ) ); //Internal Server Error
             }
         }
     }
