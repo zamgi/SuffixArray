@@ -126,9 +126,9 @@ namespace Reference.DiagnosisCodes.WebService
             #endregion
         }
 
-        private static IList< tuple > CreateTupleData( string INPUT_CSV_FILE )
+        private static IList< tuple > CreateTupleData( string INPUT_CSV_FILE, int capacity = 110_000 )
         {
-            var tuples = new List< tuple >( 110000 );
+            var tuples = new List< tuple >( capacity );
             using ( var sr = new StreamReader( INPUT_CSV_FILE ) )
             {
                 for ( var line = sr.ReadLine(); line != null; line = sr.ReadLine() )

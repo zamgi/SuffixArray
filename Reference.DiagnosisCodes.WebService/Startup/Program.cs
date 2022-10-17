@@ -1,7 +1,6 @@
 using System;
 using System.Configuration;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 
 using Microsoft.AspNetCore.Hosting;
@@ -33,8 +32,6 @@ namespace Reference.DiagnosisCodes.WebService
             var logger                  = default(ILogger);
             try
             {
-                Encoding.RegisterProvider( CodePagesEncodingProvider.Instance );
-     
                 var suffixArrayProcessor = SuffixArrayProcessor.Create( Config.INPUT_CSV_FILE );
                 //---------------------------------------------------------------//
 

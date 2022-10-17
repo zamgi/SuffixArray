@@ -8,15 +8,15 @@ using Microsoft.Extensions.Logging;
 namespace Reference.DiagnosisCodes.WebService.Controllers
 {
     [ApiController, Route("[controller]")]
-    public sealed class RestController : ControllerBase
+    public sealed class ProcessController : ControllerBase
     {
         #region [.ctor().]
         private readonly SuffixArrayProcessor _SuffixArrayProcessor;        
 #if DEBUG
-        private readonly ILogger< RestController > _Logger;
+        private readonly ILogger< ProcessController > _Logger;
 #endif
 #if DEBUG
-        public RestController( SuffixArrayProcessor suffixArrayProcessor, ILogger< RestController > logger )
+        public ProcessController( SuffixArrayProcessor suffixArrayProcessor, ILogger< ProcessController > logger )
         {
             _SuffixArrayProcessor = suffixArrayProcessor;
             _Logger               = logger;
@@ -31,19 +31,19 @@ namespace Reference.DiagnosisCodes.WebService.Controllers
             try
             {
 #if DEBUG
-                _Logger.LogInformation( $"start Find '{m.Suffix}'..." );
+                _Logger.LogInformation( $"start process: '{m.Suffix}'..." );
 #endif
                 var p = _SuffixArrayProcessor.Find( m.Suffix, m.MaxCount.GetValueOrDefault( 25 ) );
                 var result = new ResultVM( m, p );
 #if DEBUG
-                _Logger.LogInformation( $"end Find '{m.Suffix}'." );
+                _Logger.LogInformation( $"end process: '{m.Suffix}'." );
 #endif
                 return Ok( result );
             }
             catch ( Exception ex )
             {
 #if DEBUG
-                _Logger.LogError( $"Error while find: '{m.Suffix}' => {ex}" );
+                _Logger.LogError( $"Error while process: '{m.Suffix}' => {ex}" );
 #endif
                 return Ok( new ResultVM( m, ex ) );
                 //---return StatusCode( 500, new SuffixArrayJsonResult( m, ex ) ); //Internal Server Error

@@ -1,17 +1,21 @@
-using System.Diagnostics;
-using System.Linq;
 using System.Text.Json.Serialization;
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Hosting.Server;
-using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
+#if DEBUG
+using System.Diagnostics;
+using System.Linq;
+
+using Microsoft.AspNetCore.Hosting.Server;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 using Microsoft.Extensions.Hosting.WindowsServices;
+#endif
 
 namespace Reference.DiagnosisCodes.WebService
 {
@@ -24,7 +28,6 @@ namespace Reference.DiagnosisCodes.WebService
         private IConfiguration _Configuration;
         public Startup( IConfiguration configuration ) => _Configuration = configuration;        
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices( IServiceCollection services )
         {
             services.AddControllers().AddJsonOptions( options =>
@@ -62,7 +65,6 @@ namespace Reference.DiagnosisCodes.WebService
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure( IApplicationBuilder app, IWebHostEnvironment env )
         {
             if ( env.IsDevelopment() )
@@ -81,9 +83,11 @@ namespace Reference.DiagnosisCodes.WebService
 
             app.UseEndpoints( endpoints => endpoints.MapControllers() );
             //-------------------------------------------------------------//
-            
+#if DEBUG
             OpenBrowserIfRunAsConsole( app );
+#endif            
         }
+#if DEBUG
         private static void OpenBrowserIfRunAsConsole( IApplicationBuilder app )
         {
             #region [.open browser if run as console.]
@@ -113,5 +117,6 @@ namespace Reference.DiagnosisCodes.WebService
             }
             #endregion
         }
+#endif
     }
 }

@@ -164,13 +164,13 @@ namespace System.Collections.Generic
                 //if ( str == "м.бабий" )
                 //System.Diagnostics.Debugger.Break();
                 //var __ = GetSuffix( i, str ).Distinct().ToArray();
-                foreach ( var _suffix in GetSuffixes_v2( i, str ).Distinct() )
+                foreach ( var suffix_ in GetSuffixes_v2( i, str ).Distinct() )
                 {
-                    suffixes[ suffixIndex++ ] = _suffix;
+                    suffixes[ suffixIndex++ ] = suffix_;
                 }
             }
-            Array.Resize< suffix_t >( ref suffixes, suffixIndex );
-            Array.Sort< suffix_t >( suffixes, suffixComparison );
+            Array.Resize( ref suffixes, suffixIndex );
+            Array.Sort( suffixes, suffixComparison );
 
 
             var tuples = new SuffixArray< T >.tuple_t[ suffixes.Length ];
@@ -192,7 +192,7 @@ namespace System.Collections.Generic
                 data.Add( new SuffixArray< T >.data_t( suffix.SuffixIndex, suffix.WordIndex ) );
             }
             suffixes = null;
-            Array.Resize< SuffixArray< T >.tuple_t >( ref tuples, suffixIndex );
+            Array.Resize( ref tuples, suffixIndex );
             Array.Reverse( tuples );
 
             DestroyIsLetterOrDigitArray();
@@ -249,9 +249,9 @@ namespace System.Collections.Generic
         public SuffixArray( IList< T > objs, IStringValueGetter< T > stringValueGetter ) : this( objs, 0, objs.Count, stringValueGetter ) { }
         public SuffixArray( IList< T > objs, int index, int length, IStringValueGetter< T > stringValueGetter )
         {
-            if ( objs == null )                                                throw (new ArgumentNullException("objs"));
+            if ( objs == null )                                                throw (new ArgumentNullException( nameof(objs) ));
             if ( (length <= 0) || (length <= index) || (objs.Count < length) ) throw (new ArgumentException( "index-or-length" ));
-            if ( stringValueGetter == null )                                   throw (new ArgumentNullException("stringValueGetter"));
+            if ( stringValueGetter == null )                                   throw (new ArgumentNullException( nameof(stringValueGetter) ));
             //if ( values.Any( s => string.IsNullOrEmpty( s ) ) ) throw (new ArgumentNullException("values.Any()"));
 
             _Objects           = objs;
@@ -309,8 +309,8 @@ namespace System.Collections.Generic
         {
             suffix = CorrectFindSuffix( suffix, findMode );
 
-            var index = InternalBinarySearch( suffix );
             var findCount = 0;
+            var index = InternalBinarySearch( suffix );            
             if ( 0 <= index )
             {
                 //up
@@ -418,8 +418,8 @@ namespace System.Collections.Generic
 		{
             suffix = CorrectFindSuffix( suffix, findMode );
 
-            int n = InternalBinarySearch( suffix );
-            return (n >= 0);
+            var n = InternalBinarySearch( suffix );
+            return (0 <= n);
 		}
 
         public override IEnumerable< string > GetAllSuffixes( EnumerableModeEnum enumerableMode )

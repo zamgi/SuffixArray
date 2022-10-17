@@ -74,7 +74,7 @@
             type       : "POST",
             contentType: "application/json",
             dataType   : "json",
-            url        : "/Rest/Run",
+            url        : "/Process/Run",
             data       : JSON.stringify( model ),
             success: function (tuples) {
                 var endDatetime = new Date();
