@@ -133,7 +133,7 @@
                 html = '';
             $("#processFooter").html(html);
         } else {
-            html = '<div class="no-suggest">diagnoses with the suffix <span class="suggest-bold">\'' + $d.text(tuples.suffix).html() + '\'</span> not found in Reference.DiagnosisCodes</div>';
+            html = '<div class="no-suggest">diagnoses with the suffix <span class="suggest-bold">\'' + $('<div>').text(tuples.suffix).html() + '\'</span> not found in Reference.DiagnosisCodes</div>';
             $processResult.html( html );
         }        
     };

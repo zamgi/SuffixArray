@@ -7,8 +7,8 @@
     <meta name="description" content="Reference.DiagnosisCodes; search diagnosis on the part of the name; suffix search; natural language processing; computational linguistics;" />
     <meta name="keywords"    content="Reference.DiagnosisCodes; search diagnosis on the part of the name; suffix search; natural language processing; computational linguistics;" />
     <link rel="stylesheet" type="text/css" media="all" href="css/style.css" />
-    <link rel="stylesheet" type="text/css" media="all" href="css/jquery-ui.css" />
-    <script type="text/javascript" src="js/jquery-1.9.1.js"></script>
+    <link rel="stylesheet" type="text/css" media="all" href="css/jquery-ui.min.css" />
+    <script type="text/javascript" src="js/jquery-3.6.4.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui.min.js"></script>
     <script type="text/javascript" src="js/main.js"></script>
 </head>
@@ -27,7 +27,7 @@
 
                         <div id="inputParamsDiv">
                             <span id="inputTextLength"></span>
-                            <input id="suffix" type="text" value="mic" title="the part of the diagnosis name" />
+                            <input id="suffix" type="search" value="mic" title="the part of the diagnosis name" placeholder="enter part of the diagnosis name (min 2 chars)" />
                             <span id="maxCountText">max return:</span>
                             <input id="maxCount" type="number" value="1000" min="1" max="99999999" title="the maximum number of entries to return" />
 
