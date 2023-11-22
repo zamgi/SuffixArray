@@ -24,35 +24,22 @@ namespace Reference.DiagnosisCodes.WebService
     /// </summary>
     internal sealed class Startup
     {
-        private const string CORS_DEFAULT = "CORS_DEFAULT";
-        private IConfiguration _Configuration;
-        public Startup( IConfiguration configuration ) => _Configuration = configuration;        
-
         public void ConfigureServices( IServiceCollection services )
         {
-            services.AddControllers().AddJsonOptions( options =>
+            services.AddControllers().AddJsonOptions( opts =>
             {
-                //options.JsonSerializerOptions.IgnoreNullValues = true;
-                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                options.JsonSerializerOptions.Converters.Add( new JsonStringEnumConverter() );
-            });
-            services.AddCors( (options) =>
-            {
-                var cors = _Configuration.GetSection( "CORS" ).Get< string[] >();
-                if ( cors != null )
-                {
-                    // this defines a CORS policy called "CORS_DEFAULT"
-                    options.AddPolicy( CORS_DEFAULT, (policy) => policy.WithOrigins( cors ).AllowAnyHeader().AllowAnyMethod()/*.AllowAnyOrigin().AllowCredentials()*/ );
-                }
+                //opts.JsonSerializerOptions.IgnoreNullValues = true;
+                opts.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                opts.JsonSerializerOptions.Converters.Add( new JsonStringEnumConverter() );
             });
 
-            services.Configure< IISServerOptions >( options => options.MaxRequestBodySize = int.MaxValue );
-            services.Configure< KestrelServerOptions >( options => options.Limits.MaxRequestBodySize = int.MaxValue );
-            services.Configure< FormOptions >( x =>
+            services.Configure< IISServerOptions >( opts => opts.MaxRequestBodySize = int.MaxValue );
+            services.Configure< KestrelServerOptions >( opts => opts.Limits.MaxRequestBodySize = int.MaxValue );
+            services.Configure< FormOptions >( opts =>
             {
-                x.ValueLengthLimit            = int.MaxValue;
-                x.MultipartBodyLengthLimit    = int.MaxValue; // if don't set default value is: 128 MB
-                x.MultipartHeadersLengthLimit = int.MaxValue;
+                opts.ValueLengthLimit            = int.MaxValue;
+                opts.MultipartBodyLengthLimit    = int.MaxValue; // if don't set default value is: 128 MB
+                opts.MultipartHeadersLengthLimit = int.MaxValue;
             });
         }
 
@@ -69,9 +56,6 @@ namespace Reference.DiagnosisCodes.WebService
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseCors( CORS_DEFAULT );
-            //---app.UseCors( configurePolicy => configurePolicy.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials() );
-
             app.UseEndpoints( endpoints => endpoints.MapControllers() );
 
             const string INDEX_PAGE_PATH = "/index.html";
@@ -97,23 +81,19 @@ namespace Reference.DiagnosisCodes.WebService
             {
                 var server    = app.ApplicationServices.GetRequiredService< IServer >();
                 var addresses = server.Features?.Get< IServerAddressesFeature >()?.Addresses;
-                var address   = addresses?.FirstOrDefault();
+                var address   = addresses?.FirstOrDefault( a => a.StartsWith( "https:" ) ) ?? addresses?.FirstOrDefault();
                 
                 if ( address == null )
                 {
                     var config = app.ApplicationServices.GetService< IConfiguration >();
                     address = config.GetSection( "Kestrel:Endpoints:Https:Url" ).Value ??
                               config.GetSection( "Kestrel:Endpoints:Http:Url"  ).Value;
-                    if ( address != null )
-                    {
-                        address = address.Replace( "/*:", "/localhost:" );
-                    }
                 }
-
-                //System.Console.WriteLine( $"[ADDRESS: {address ?? "NULL"}]" );
 
                 if ( address != null )
                 {
+                    address = address.Replace( "/*:", "/localhost:" );
+
                     using ( Process.Start( new ProcessStartInfo( address.TrimEnd('/') + "/index.html" /*"http://localhost:1234"*/ ) { UseShellExecute = true } ) ) { };
                 }                
             }

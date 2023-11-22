@@ -25,33 +25,33 @@ namespace Reference.DiagnosisCodes.ConsoleApp
         /// <summary>
         /// 
         /// </summary>
-        private sealed class tupleIStringValueGetter : IStringValueGetter< tuple >
+        private sealed class tupleIStringValueGetter : IStringValueGetter< Tuple >
         {
-            public string GetStringValue( in tuple t ) => t.Text;
+            public string GetStringValue( in Tuple t ) => t.Text;
         }
 
         /// <summary>
         /// 
         /// </summary>
-        private struct tuple
+        private readonly struct Tuple
         {
-            public int    Id   { get; private set; }
-            public string Text { get; private set; }
+            public int    Id   { get; init; }
+            public string Text { get; init; }
 
-            public tuple( int id, string text ) : this()
+            public Tuple( int id, string text ) : this()
             {
                 Id   = id;
                 Text = text;
             }
 
-            public static tuple Create( string s )
+            public static Tuple Create( string s )
             {
-                var index = s.IndexOf( ';' );
-                if ( index == -1 )
+                var idx = s.IndexOf( ';' );
+                if ( idx == -1 )
                     throw (new InvalidDataException());
 
-                return (new tuple() { Id   = int.Parse( s.Substring( 0, index ) ), 
-                                      Text = s.Substring( index + 1 ) 
+                return (new Tuple() { Id   = int.Parse( s.Substring( 0, idx ) ), 
+                                      Text = s.Substring( idx + 1 ) 
                                     });
             }
         }
@@ -78,7 +78,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             Console.ReadLine();
         }
 
-        private static SuffixArrayBase< tuple > CreateSuffixArray()
+        private static SuffixArrayBase< Tuple > CreateSuffixArray()
         {
             #region [.initialize input-data.]
             var sw = Stopwatch.StartNew();
@@ -100,12 +100,12 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             Console.WriteLine( "INPUT_CSV_FILE: '" + Config.INPUT_CSV_FILE + "'..." );
             
             var text_length_total = 0L;
-            var tuples = new List< tuple >( 110000 );
+            var tuples = new List< Tuple >( 110000 );
             using ( var sr = new StreamReader( Config.INPUT_CSV_FILE ) )
             {
                 for ( var line = sr.ReadLine(); line != null; line = sr.ReadLine() )
                 {
-                    var t = tuple.Create( line );
+                    var t = Tuple.Create( line );
                     text_length_total += t.Text.Length;
                     tuples.Add( t );
                 }
@@ -123,17 +123,17 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             Console.WriteLine( "Start build suffix-array..." );
 
             sw.Restart();
-            var sa = new SuffixArray_v2< tuple >( tuples, new tupleIStringValueGetter() ); //---new SuffixArray< tuple >( tuples, new tupleIStringValueGetter() ); //--- 
+            var sa = new SuffixArray_v2< Tuple >( tuples, new tupleIStringValueGetter() ); //---new SuffixArray< tuple >( tuples, new tupleIStringValueGetter() ); //--- 
             sw.Stop();
 
             Console.WriteLine( "end, elapsed: " + sw.Elapsed );
-            Console.WriteLine( "base of suffix: " + sa.GetAllSuffixesCount( SuffixArray< tuple >.EnumerableModeEnum.BaseOfSuffix ).ToString("0,0") );
-            Console.WriteLine( "all sub-suffix: " + sa.GetAllSuffixesCount( SuffixArray< tuple >.EnumerableModeEnum.AllSubSuffix ).ToString("0,0") );
+            Console.WriteLine( "base of suffix: " + sa.GetAllSuffixesCount( SuffixArray< Tuple >.EnumerableModeEnum.BaseOfSuffix ).ToString("0,0") );
+            Console.WriteLine( "all sub-suffix: " + sa.GetAllSuffixesCount( SuffixArray< Tuple >.EnumerableModeEnum.AllSubSuffix ).ToString("0,0") );
             Console.WriteLine( "------------------------------------" + Environment.NewLine );
 
             return (sa);
         }
-        private static void SuffixArray__test( SuffixArrayBase< tuple > sa )
+        private static void SuffixArray__test( SuffixArrayBase< Tuple > sa )
         {            
             Action< string > find = (suffix) =>
             {
@@ -172,7 +172,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             find( "exe" );
         }
 
-        private static void SuffixArray__test_Threads( SuffixArrayBase< tuple > sa )
+        private static void SuffixArray__test_Threads( SuffixArrayBase< Tuple > sa )
         {
             const int THREAD_COUNT = 4;
 
@@ -186,7 +186,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
                 br.SignalAndWait();
             }
         }
-        private static void SuffixArray__test_ThreadRoutine( SuffixArrayBase< tuple > sa, Barrier br )
+        private static void SuffixArray__test_ThreadRoutine( SuffixArrayBase< Tuple > sa, Barrier br )
         {
             var th = new Thread( _ /*state*/ =>
             {
