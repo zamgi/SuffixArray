@@ -157,7 +157,7 @@ namespace Reference.DiagnosisCodes.ConsoleApp
                 {
                     if ( MAX < findCount )
                     {
-                        Console.WriteLine( $"\t ...else {(findCount - MAX + 1)}..." );
+                        Console.WriteLine( $"\t ...more {(findCount - MAX + 1)}..." );
                     }
                     Console.WriteLine( $"\t  => ({findCount})" );
                 }
@@ -170,6 +170,9 @@ namespace Reference.DiagnosisCodes.ConsoleApp
             find( "ru" );
             find( "al" );
             find( "exe" );
+            find( "nim" );
+            find( "ankle" );
+            find( "fusion" ); 
         }
 
         private static void SuffixArray__test_Threads( SuffixArrayBase< Tuple > sa )
